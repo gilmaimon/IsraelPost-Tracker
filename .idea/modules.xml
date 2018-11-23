@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/IsraelPostTracker.iml" filepath="$PROJECT_DIR$/IsraelPostTracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IsraelPost-Tracker.iml" filepath="$PROJECT_DIR$/IsraelPost-Tracker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
