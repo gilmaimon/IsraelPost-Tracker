@@ -9,7 +9,7 @@ public class ItemClickedListenerContainerUtil<Ty> implements ItemClickedListener
     public void removeItemClickedListener() {
         this.listener = null;
     }
-    protected void disptach(Ty item, int position) {
+    public void dispatch(Ty item, int position) {
         if(listener == null) return;
         listener.itemClicked(item, position);
     }
