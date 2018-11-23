@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.gilmaimon.israelposttracker.Branches.Branch;
+import com.gilmaimon.israelposttracker.Branches.BranchesProxy;
+import com.gilmaimon.israelposttracker.Branches.JsonBranches;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.Parsing.PostMessageParser;
@@ -12,12 +15,23 @@ import com.gilmaimon.israelposttracker.Parsing.UnknownMessageFormat;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.Sorting.PostMessageSorter;
 
+import java.io.IOException;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        try {
+            BranchesProxy branches = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
+            List<Branch> allBranches = branches.getAll();
+            Branch branch = branches.getBranch(2328);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
             testParserSorter();
