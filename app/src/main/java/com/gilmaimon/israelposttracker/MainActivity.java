@@ -2,10 +2,16 @@ package com.gilmaimon.israelposttracker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.gilmaimon.israelposttracker.AndroidUtils.ItemClickedListener;
 import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.Branches.BranchesProxy;
+import com.gilmaimon.israelposttracker.Branches.BranchesRecyclerViewAdapter;
 import com.gilmaimon.israelposttracker.Branches.JsonBranches;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
@@ -26,19 +32,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
         try {
             BranchesProxy branches = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
             List<Branch> allBranches = branches.getAll();
-            Branch branch = branches.getBranch(2328);
+
+            BranchesRecyclerViewAdapter adapter = new BranchesRecyclerViewAdapter(this, allBranches);
+            adapter.setItemClickedListener(new ItemClickedListener<Branch>() {
+                @Override
+                public void itemClicked(Branch item, int position) {
+                    Toast.makeText(MainActivity.this, item.getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            recyclerView.setAdapter(adapter);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
-            testParserSorter();
-        } catch (UnknownMessageFormat unknownMessageFormat) {
-            unknownMessageFormat.printStackTrace();
-        }
+//        try {
+//            testParserSorter();
+//        } catch (UnknownMessageFormat unknownMessageFormat) {
+//            unknownMessageFormat.printStackTrace();
+//        }
     }
 
     void testParserSorter() throws UnknownMessageFormat {
