@@ -1,4 +1,4 @@
-package com.gilmaimon.israelposttracker;
+package com.gilmaimon.israelposttracker.AndroidUtils;
 
 import android.content.Context;
 
@@ -11,7 +11,7 @@ public class RawResource {
     private int resourceId;
     private Context context;
 
-    RawResource(Context context, int id) {
+    public RawResource(Context context, int id) {
         this.resourceId = id;
         this.context = context;
     }
