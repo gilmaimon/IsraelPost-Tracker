@@ -14,6 +14,7 @@ import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
 import com.gilmaimon.israelposttracker.Parsing.UnknownMessageFormat;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.Sorting.PostMessageSorter;
+import com.gilmaimon.israelposttracker.AndroidUtils.RawResource;
 
 import java.io.IOException;
 import java.util.List;
