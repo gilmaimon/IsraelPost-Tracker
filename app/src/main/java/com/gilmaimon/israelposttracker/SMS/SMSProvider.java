@@ -39,7 +39,7 @@ public class SMSProvider {
                 new String[] {
                         fromSenderFilter
                 },
-                null,
+                "date asc",
                 null
         );
         hasMoreToRead = cursor.moveToFirst();
@@ -78,7 +78,7 @@ public class SMSProvider {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public List<SMSMessage> readAllMessages() {
+    public List<SMSMessage> getAllMessages() {
         List<SMSMessage> result = new ArrayList<>();
         while(hasNext()) {
             result.add(
