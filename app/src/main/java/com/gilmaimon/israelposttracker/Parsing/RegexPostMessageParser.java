@@ -33,7 +33,7 @@ public class RegexPostMessageParser implements PostMessageParser {
     @NonNull
     @Override
     public Packet parsePickedUpMessage(@NonNull String content) throws UnknownMessageFormat {
-        Matcher m = Pattern.compile("([A-Z]{2}[0-9]{8,15}[A-Z]+)")
+        Matcher m = Pattern.compile("([A-Z]+[0-9]+[A-Z]*)")
                 .matcher(content);
 
         if(!m.find()) {
