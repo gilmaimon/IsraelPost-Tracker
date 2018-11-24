@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-public abstract class BranchesProxy {
+public abstract class BranchesProvider {
     abstract boolean available();
 
     @NonNull
