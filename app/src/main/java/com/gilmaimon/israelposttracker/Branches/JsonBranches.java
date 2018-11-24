@@ -7,10 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class JsonBranches extends BranchesProxy {
+public class JsonBranches extends BranchesProvider {
 
     private List<Branch> allBranches = null;
     private boolean available = true;
