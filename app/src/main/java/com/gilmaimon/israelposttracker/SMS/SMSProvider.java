@@ -71,7 +71,6 @@ public class SMSProvider {
 
         // Return SMSMessage representation of the SMS data
         return new SMSMessage(
-                id,
                 sender,
                 body,
                 new Date(Long.valueOf(date))

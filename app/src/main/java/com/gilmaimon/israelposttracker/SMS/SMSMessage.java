@@ -4,24 +4,22 @@ import java.util.Date;
 
 public class SMSMessage {
 
-    private String uniqueId;
     private String sender;
     private String message;
     private Date date;
 
-    SMSMessage(String uniqueId, String sender, String message, Date date) {
-        this.uniqueId = uniqueId;
+    SMSMessage(String sender, String message, Date date) {
         this.sender = sender;
         this.message = message;
         this.date = date;
     }
 
-    public SMSMessage(String uniqueId, String sender, String message, long date) {
-        this(uniqueId, sender, message, new Date(date));
+    public SMSMessage(String sender, String message, long date) {
+        this(sender, message, new Date(date));
     }
 
-    public String getUniqueId() {
-        return uniqueId;
+    public int getUniqueId() {
+        return hashCode();
     }
 
     public Date getDate() {
@@ -39,8 +37,13 @@ public class SMSMessage {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof SMSMessage) {
-            return ((SMSMessage) obj).uniqueId.equals(this.uniqueId);
+            return hashCode() == obj.hashCode();
         }
         else return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (getDate() + getMessage() + getSender()).hashCode();
     }
 }
