@@ -7,8 +7,13 @@ public class Packet {
         this.postId = postId;
     }
 
-    String getPostId() {
+    public String getPostId() {
         return this.postId;
+    }
+
+    @Override
+    public int hashCode() {
+        return postId.hashCode();
     }
 
     @Override
