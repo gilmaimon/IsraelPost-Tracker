@@ -22,4 +22,9 @@ public class Branch {
     public String getAddress() {
         return address;
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }
