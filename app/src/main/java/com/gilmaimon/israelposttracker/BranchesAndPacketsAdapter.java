@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -26,17 +27,44 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
     private final int ITEM_TYPE_POSTAL_ITEM = 2;
 
     private Context context;
+    private PostPacketsBalance balance;
     private List<Object> dataset;
 
-    BranchesAndPacketsAdapter(@NonNull Context context, @NonNull Map<Branch, Set<PendingPacket>> pendingPackets) {
-        this.context = context;
-        this.dataset = datasetFromPendingPacketsMap(pendingPackets);
+    public void removeClickedListener() {
+        clickedListener = null;
     }
 
-    private List<Object> datasetFromPendingPacketsMap(Map<Branch, Set<PendingPacket>> pendingPackets) {
-        List<Object> mixedDataset = new ArrayList<>();
-        for(Branch branch : pendingPackets.keySet()) {
-            mixedDataset.add(branch);
+    public void setClickedListener(ItemClickedListener listener) {
+        this.clickedListener = listener;
+    }
+
+    interface ItemClickedListener {
+        void onBranchClicked(Branch branch);
+        void onPacketClicked(PendingPacket packet);
+    }
+
+    private ItemClickedListener clickedListener;
+
+    BranchesAndPacketsAdapter(@NonNull Context context, @NonNull PostPacketsBalance balance) {
+        this.context = context;
+        this.balance = balance;
+        this.dataset = new ArrayList<>();
+        updateDatasetFromPendingPacketsMap();
+
+        registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                updateDatasetFromPendingPacketsMap();
+            }
+        });
+    }
+
+    private void updateDatasetFromPendingPacketsMap() {
+        Map<Branch, Set<PendingPacket>> pendingPackets = balance.getAllPendingPackets();
+        this.dataset.clear();
+        for (Branch branch : pendingPackets.keySet()) {
+            this.dataset.add(branch);
             List<PendingPacket> branchPackets = new ArrayList<>(pendingPackets.get(branch));
             Collections.sort(branchPackets, new Comparator<PendingPacket>() {
                 @Override
@@ -44,9 +72,8 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
                     return lhs.getLastNotice().compareTo(rhs.getLastNotice());
                 }
             });
-            mixedDataset.addAll(branchPackets);
+            this.dataset.addAll(branchPackets);
         }
-        return mixedDataset;
     }
 
     class PendingPacketViewHolder extends RecyclerView.ViewHolder {
@@ -114,7 +141,7 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
             long now = System.currentTimeMillis();
 
             CharSequence ago =
-                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.SECOND_IN_MILLIS);
             return String.valueOf(ago);
         }
 
@@ -123,7 +150,16 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
             switch (holder.getItemViewType()) {
                 case ITEM_TYPE_BRANCH:
                     BranchViewHolder branchViewHolder = (BranchViewHolder) holder;
-                    Branch branch = (Branch) dataset.get(position);
+                    final Branch branch = (Branch) dataset.get(position);
+
+                    branchViewHolder.container.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(clickedListener != null) {
+                                clickedListener.onBranchClicked(branch);
+                            }
+                        }
+                    });
 
                     branchViewHolder.branchNameTV.setText(branch.getName());
                     branchViewHolder.branchAddressTV.setText(branch.getAddress());
@@ -132,7 +168,17 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
 
                 case ITEM_TYPE_POSTAL_ITEM:
                     PendingPacketViewHolder packetViewHolder = (PendingPacketViewHolder) holder;
-                    PendingPacket packet = (PendingPacket) dataset.get(position);
+                    final PendingPacket packet = (PendingPacket) dataset.get(position);
+
+                    packetViewHolder.container.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(clickedListener != null) {
+                                clickedListener.onPacketClicked(packet);
+                            }
+                        }
+                    });
+
                     packetViewHolder.postalIdTV.setText(packet.getPostId());
                     packetViewHolder.packetBranchIdTV.setText(packet.getBranchPacketId());
                     packetViewHolder.lastNoticeTV.setText(

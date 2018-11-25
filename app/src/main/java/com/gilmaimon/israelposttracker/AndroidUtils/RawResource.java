@@ -16,7 +16,7 @@ public class RawResource {
         this.context = context;
     }
 
-    public String readAll() throws IOException {
+    public String readAll() {
         InputStream is = context.getResources().openRawResource(resourceId );
         String content = null;
         try {
@@ -24,7 +24,7 @@ public class RawResource {
         } catch (IOException e) {
             e.printStackTrace();
             IOUtils.closeQuietly(is);
-            throw e;
+            return "-1";
         }
 
         IOUtils.closeQuietly(is);

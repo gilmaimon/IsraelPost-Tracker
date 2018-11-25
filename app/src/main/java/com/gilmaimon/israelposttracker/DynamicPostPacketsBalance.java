@@ -28,15 +28,18 @@ class DynamicPostPacketsBalance implements PostPacketsBalance {
     private final PostMessageSorter sorter;
     private final PostMessageParser parser;
     private Map<Branch, Set<PendingPacket>> allPendingMessages;
+    private UserAppendedPacketActions userAppendedPacketActions;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    DynamicPostPacketsBalance(@NonNull SMSProvider smsProvider,
+    DynamicPostPacketsBalance(@NonNull UserAppendedPacketActions userAppendedPacketActions,
+                              @NonNull SMSProvider smsProvider,
                               @NonNull BranchesProvider branchesProvider,
                               @NonNull PostMessageSorter sorter,
                               @NonNull PostMessageParser parser) {
 
         allPendingMessages = new HashMap<>();
 
+        this.userAppendedPacketActions = userAppendedPacketActions;
         this.smsProvider = smsProvider;
         this.branchesProvider = branchesProvider;
         this.sorter = sorter;
@@ -68,32 +71,40 @@ class DynamicPostPacketsBalance implements PostPacketsBalance {
         reloadPendingPackets();
     }
 
+    private void addPendingPacket(PendingPacket pendingPacket) {
+        Branch branch = branchesProvider.getBranch(pendingPacket.getBranchId());
+        if(!allPendingMessages.containsKey(branch)) {
+            allPendingMessages.put(branch, new HashSet<PendingPacket>());
+        }
+        allPendingMessages.get(branch).remove(pendingPacket);
+        allPendingMessages.get(branch).add(pendingPacket);
+    }
+
     private boolean processPendingPacket(SMSMessage message) {
         try {
             PendingPacket pendingPacket = parser.parseAwaitingPacketMessage(message);
-            Branch branch = branchesProvider.getBranch(pendingPacket.getBranchId());
-            if(!allPendingMessages.containsKey(branch)) {
-                allPendingMessages.put(branch, new HashSet<PendingPacket>());
-            }
-            allPendingMessages.get(branch).remove(pendingPacket);
-            allPendingMessages.get(branch).add(pendingPacket);
+            addPendingPacket(pendingPacket);
             return true;
         } catch (UnknownMessageFormat unknownMessageFormat) {
             unknownMessageFormat.printStackTrace();
             return false;
         }
     }
+
+    private void dismissPacket(Packet packet) {
+        for(Branch branch : allPendingMessages.keySet()) {
+            if(allPendingMessages.get(branch).remove(packet)) {
+                if(allPendingMessages.get(branch).isEmpty()) {
+                    allPendingMessages.remove(branch);
+                }
+                break;
+            }
+        }
+    }
     private boolean processPickedUpPacket(SMSMessage message) {
         try {
             Packet packet = parser.parsePickedUpMessage(message);
-            for(Branch branch : allPendingMessages.keySet()) {
-                if(allPendingMessages.get(branch).remove(packet)) {
-                    if(allPendingMessages.get(branch).isEmpty()) {
-                        allPendingMessages.remove(branch);
-                    }
-                    break;
-                }
-            }
+            dismissPacket(packet);
             return true;
         } catch (UnknownMessageFormat unknownMessageFormat) {
             unknownMessageFormat.printStackTrace();
@@ -105,8 +116,7 @@ class DynamicPostPacketsBalance implements PostPacketsBalance {
     private void reloadPendingPackets() {
         allPendingMessages.clear();
 
-        while(smsProvider.hasNext()) {
-            SMSMessage message = smsProvider.getNextMessage();
+        for(SMSMessage message : smsProvider.getAllMessages()) {
             switch (sorter.sortMessage(message.getMessage())) {
                 case AwaitingPickup:
                     processPendingPacket(message);
@@ -120,6 +130,16 @@ class DynamicPostPacketsBalance implements PostPacketsBalance {
                     // Nothing to do when sorting fails
                     break;
             }
+        }
+
+        // Add packets that the user added manually
+        for(PendingPacket pendingPacket : userAppendedPacketActions.getPendingPackets()) {
+            addPendingPacket(pendingPacket);
+        }
+
+        // remove packets that the user removed manually
+        for(Packet packet : userAppendedPacketActions.getDismissedPackets()) {
+            dismissPacket(packet);
         }
     }
 }

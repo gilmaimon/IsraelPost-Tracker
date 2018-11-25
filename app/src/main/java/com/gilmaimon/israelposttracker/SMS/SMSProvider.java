@@ -46,20 +46,12 @@ public class SMSProvider {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    private void lazyInit() {
-        if(cursor == null) initCursor();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public boolean hasNext() {
-        lazyInit();
+    private boolean hasNext() {
         return hasMoreToRead;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public SMSMessage getNextMessage() {
-        lazyInit();
-
+    private SMSMessage getNextMessage() {
         // Read SMS data
         String id = cursor.getString(cursor.getColumnIndex("_id"));
         String body = cursor.getString(cursor.getColumnIndex("body"));
@@ -79,6 +71,7 @@ public class SMSProvider {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public List<SMSMessage> getAllMessages() {
+        initCursor();
         List<SMSMessage> result = new ArrayList<>();
         while(hasNext()) {
             result.add(

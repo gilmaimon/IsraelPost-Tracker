@@ -15,19 +15,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.Permissions;
 import com.gilmaimon.israelposttracker.AndroidUtils.RawResource;
+import com.gilmaimon.israelposttracker.Branches.Branch;
+import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Branches.JsonBranches;
+import com.gilmaimon.israelposttracker.Packets.Packet;
+import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
 import com.gilmaimon.israelposttracker.SMS.IncomingIsraelPostSMSMessages;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 
-import java.io.IOException;
+import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements Permissions.PermissionCallback {
+public class MainActivity extends AppCompatActivity implements Permissions.PermissionCallback, BranchesAndPacketsAdapter.ItemClickedListener {
 
     private Permissions.OnRequestPermissionHandler mSmsPermissionHandler;
     private BroadcastReceiver newSmsMessageReceiver;
@@ -46,11 +52,7 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onReceive(Context context, Intent intent) {
-                try {
-                    showAllPendingPackets();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                updateRecyclerView();
             }
         };
 
@@ -71,22 +73,44 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
                 .unregisterReceiver(newSmsMessageReceiver);
     }
 
+    private UserAppendedPacketActions userAppendedPacketActions;
+    private BranchesProvider branchesProvider;
+    private PostPacketsBalance balance;
+    private BranchesAndPacketsAdapter branchesPacketsAdapter;
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        findViewById(R.id.debugRemoveBTN).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String packetId =((EditText) findViewById(R.id.debugPacketIdToRemove)).getText().toString();
+                userAppendedPacketActions.DismissPendingPacket(new Packet(packetId));
+                updateRecyclerView();
+            }
+        });
+
+        findViewById(R.id.debugAddBTN).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String packetId =((EditText) findViewById(R.id.debugPacketIdET)).getText().toString();
+                String branchId =((EditText) findViewById(R.id.debugBranchIdET)).getText().toString();
+                PendingPacket pendingPacket = new PendingPacket(
+                        branchId + '@' + packetId,
+                        Integer.valueOf(branchId),
+                        packetId,
+                        new Date()
+                );
+                userAppendedPacketActions.addPendingPacket(pendingPacket);
+                updateRecyclerView();
+            }
+        });
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    private void showAllPendingPackets() throws IOException {
-        PostPacketsBalance balance = new DynamicPostPacketsBalance(
-                SMSProvider.from(this, "Israel Post"),
-                new JsonBranches(new RawResource(this, R.raw.branches).readAll()),
-                KeywordsMessagesSorter.getDefault(),
-                new RegexPostMessageParser()
-        );
-
+    private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         recyclerView.setHasFixedSize(true);
@@ -96,11 +120,37 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        BranchesAndPacketsAdapter adapter = new BranchesAndPacketsAdapter(
+        branchesPacketsAdapter = new BranchesAndPacketsAdapter(
                 this,
-                balance.getAllPendingPackets()
+                balance
         );
-        recyclerView.setAdapter(adapter);
+
+        branchesPacketsAdapter.setClickedListener(this);
+
+        recyclerView.setAdapter(branchesPacketsAdapter);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    void initLocals() {
+        branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
+        userAppendedPacketActions = new TemporaryUserAppendedPacketActions(
+                branchesProvider
+        );
+
+        balance = new DynamicPostPacketsBalance(
+                userAppendedPacketActions,
+                SMSProvider.from(this, "%1111%"), // todo: change to "Israel Post"
+                branchesProvider,
+                KeywordsMessagesSorter.getDefault(),
+                new RegexPostMessageParser()
+        );
+        initRecyclerView();
+    }
+
+    private void updateRecyclerView() {
+        balance.notifyStateChanged();
+        branchesPacketsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -113,16 +163,24 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
     @Override
     public void permissionGranted(String[] permissions) {
         Toast.makeText(MainActivity.this, "Got it, tnx!", Toast.LENGTH_LONG).show();
-        try {
-            showAllPendingPackets();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        initLocals();
     }
 
     @Override
     public void permissionDenied(String[] permissions) {
         Toast.makeText(MainActivity.this, "Gotta have dat permission", Toast.LENGTH_LONG).show();
         finish();
+    }
+
+    @Override
+    public void onBranchClicked(Branch branch) {
+        EditText debugBranchIdET = findViewById(R.id.debugBranchIdET);
+        debugBranchIdET.setText(String.valueOf(branch.getId()));
+    }
+
+    @Override
+    public void onPacketClicked(PendingPacket packet) {
+        EditText debugPacketIdToRemove = findViewById(R.id.debugPacketIdToRemove);
+        debugPacketIdToRemove.setText(packet.getPostId());
     }
 }
