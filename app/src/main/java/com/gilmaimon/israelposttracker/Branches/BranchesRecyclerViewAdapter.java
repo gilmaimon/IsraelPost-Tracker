@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BranchesRecyclerViewAdapter
-        extends RecyclerView.Adapter<BranchesRecyclerViewAdapter.BranchViewHolder>
+        extends RecyclerView.Adapter<BranchViewHolder>
         implements ItemClickedListenerContainer<Branch> {
 
     private final Context context;
@@ -81,23 +81,5 @@ public class BranchesRecyclerViewAdapter
         this.listenerUtil.removeItemClickedListener();
     }
 
-    public static class BranchViewHolder extends RecyclerView.ViewHolder {
 
-        private ViewGroup container;
-        private TextView idTV;
-        private TextView branchNameTV;
-        private TextView branchAddressTV;
-
-        public BranchViewHolder(ViewGroup container,
-                                TextView idTV,
-                                TextView branchNameTV,
-                                TextView branchAddressTV) {
-
-            super(container);
-            this.container = container;
-            this.idTV = idTV;
-            this.branchNameTV = branchNameTV;
-            this.branchAddressTV = branchAddressTV;
-        }
-    }
 }
