@@ -4,43 +4,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#eee"
+    >
 
-    <TextView android:id="@+id/branchTitleTV"
-        android:layout_marginTop="15dp"
-        android:gravity="start"
+    <TextView android:id="@+id/packetBranchIdTV"
+        android:layout_marginTop="5dp"
+        android:gravity="right"
         android:textColor="#111"
         android:layout_marginHorizontal="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="יחידת דואר ממס - בן בן"
-        android:textSize="22sp"
+        android:text="ג1234"
+        android:textSize="20sp"
         />
 
-    <TextView android:id="@+id/branchAddressTV"
-        android:gravity="start"
+    <TextView android:id="@+id/postalIdTV"
+        android:gravity="right"
         android:textColor="#666"
-        android:layout_below="@id/branchTitleTV"
+        android:layout_below="@id/packetBranchIdTV"
         android:layout_marginHorizontal="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ההסתדרות 40, מיקוד: 7864118 אשקלון"
+        android:text="YY511282674IL"
         android:textSize="10sp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="5dp"
         />
 
     <TextView
-        android:id="@+id/branchIdTV"
+        android:id="@+id/lastNoticeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="5dp"
-        android:gravity="start"
-        android:text="0004"
+        android:gravity="left"
+        android:layout_marginTop="10dp"
+        android:text="3 days ago"
         android:textColor="#999"
         android:textSize="10sp"
-        android:layout_alignParentLeft="true"
         />
 
 
