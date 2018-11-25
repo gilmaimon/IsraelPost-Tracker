@@ -1,4 +1,4 @@
-package com.gilmaimon.israelposttracker;
+package com.gilmaimon.israelposttracker.UserAppended;
 
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;

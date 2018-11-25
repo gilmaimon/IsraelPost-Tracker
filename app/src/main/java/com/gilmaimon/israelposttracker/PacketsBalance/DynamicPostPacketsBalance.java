@@ -1,4 +1,4 @@
-package com.gilmaimon.israelposttracker;
+package com.gilmaimon.israelposttracker.PacketsBalance;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -14,14 +14,14 @@ import com.gilmaimon.israelposttracker.Parsing.UnknownMessageFormat;
 import com.gilmaimon.israelposttracker.SMS.SMSMessage;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.PostMessageSorter;
+import com.gilmaimon.israelposttracker.UserAppended.UserAppendedPacketActions;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class DynamicPostPacketsBalance implements PostPacketsBalance {
+public class DynamicPostPacketsBalance implements PostPacketsBalance {
 
     private final SMSProvider smsProvider;
     private final BranchesProvider branchesProvider;
@@ -31,11 +31,11 @@ class DynamicPostPacketsBalance implements PostPacketsBalance {
     private UserAppendedPacketActions userAppendedPacketActions;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    DynamicPostPacketsBalance(@NonNull UserAppendedPacketActions userAppendedPacketActions,
-                              @NonNull SMSProvider smsProvider,
-                              @NonNull BranchesProvider branchesProvider,
-                              @NonNull PostMessageSorter sorter,
-                              @NonNull PostMessageParser parser) {
+    public DynamicPostPacketsBalance(@NonNull UserAppendedPacketActions userAppendedPacketActions,
+                                     @NonNull SMSProvider smsProvider,
+                                     @NonNull BranchesProvider branchesProvider,
+                                     @NonNull PostMessageSorter sorter,
+                                     @NonNull PostMessageParser parser) {
 
         allPendingMessages = new HashMap<>();
 

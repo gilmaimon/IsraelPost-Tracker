@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.Branches.BranchViewHolder;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
+import com.gilmaimon.israelposttracker.PacketsBalance.PostPacketsBalance;
 
 import java.util.ArrayList;
 import java.util.Collections;

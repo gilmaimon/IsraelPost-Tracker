@@ -1,20 +1,17 @@
-package com.gilmaimon.israelposttracker;
+package com.gilmaimon.israelposttracker.UserAppended;
 
 import android.support.annotation.NonNull;
 
-import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-class TemporaryUserAppendedPacketActions implements UserAppendedPacketActions {
+public class TemporaryUserAppendedPacketActions implements UserAppendedPacketActions {
 
     private BranchesProvider branchesProvider;
 
