@@ -18,6 +18,7 @@ import com.gilmaimon.israelposttracker.UserAppended.UserAppendedPacketActions;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,7 +72,7 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
         reloadPendingPackets();
     }
 
-    private void addPendingPacket(PendingPacket pendingPacket) {
+    private void _addPendingPacket(PendingPacket pendingPacket) {
         Branch branch = branchesProvider.getBranch(pendingPacket.getBranchId());
         if(!allPendingMessages.containsKey(branch)) {
             allPendingMessages.put(branch, new HashSet<PendingPacket>());
@@ -83,7 +84,7 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
     private boolean processPendingPacket(SMSMessage message) {
         try {
             PendingPacket pendingPacket = parser.parseAwaitingPacketMessage(message);
-            addPendingPacket(pendingPacket);
+            _addPendingPacket(pendingPacket);
             return true;
         } catch (UnknownMessageFormat unknownMessageFormat) {
             unknownMessageFormat.printStackTrace();
@@ -91,7 +92,7 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
         }
     }
 
-    private void dismissPacket(Packet packet) {
+    private void _dismissPacket(Packet packet) {
         for(Branch branch : allPendingMessages.keySet()) {
             if(allPendingMessages.get(branch).remove(packet)) {
                 if(allPendingMessages.get(branch).isEmpty()) {
@@ -104,7 +105,7 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
     private boolean processPickedUpPacket(SMSMessage message) {
         try {
             Packet packet = parser.parsePickedUpMessage(message);
-            dismissPacket(packet);
+            _dismissPacket(packet);
             return true;
         } catch (UnknownMessageFormat unknownMessageFormat) {
             unknownMessageFormat.printStackTrace();
@@ -134,12 +135,36 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
 
         // Add packets that the user added manually
         for(PendingPacket pendingPacket : userAppendedPacketActions.getPendingPackets()) {
-            addPendingPacket(pendingPacket);
+            _addPendingPacket(pendingPacket);
         }
 
         // remove packets that the user removed manually
         for(Packet packet : userAppendedPacketActions.getDismissedPackets()) {
-            dismissPacket(packet);
+            _dismissPacket(packet);
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void dismissPendingPacket(Packet packet) {
+        userAppendedPacketActions.dismissPendingPacket(packet);
+        notifyStateChanged();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void addPendingPacket(PendingPacket packet) {
+        userAppendedPacketActions.addPendingPacket(packet);
+        notifyStateChanged();
+    }
+
+    @Override
+    public List<Packet> getDismissedPackets() {
+        return userAppendedPacketActions.getDismissedPackets();
+    }
+
+    @Override
+    public List<PendingPacket> getPendingPackets() {
+        return userAppendedPacketActions.getPendingPackets();
     }
 }

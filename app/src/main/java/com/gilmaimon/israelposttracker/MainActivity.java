@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -33,7 +34,6 @@ import com.gilmaimon.israelposttracker.SMS.IncomingIsraelPostSMSMessages;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.UserAppended.TemporaryUserAppendedPacketActions;
-import com.gilmaimon.israelposttracker.UserAppended.UserAppendedPacketActions;
 
 import java.util.Date;
 
@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
                 .unregisterReceiver(newSmsMessageReceiver);
     }
 
-    private UserAppendedPacketActions userAppendedPacketActions;
     private BranchesProvider branchesProvider;
     private PostPacketsBalance balance;
     private BranchesAndPacketsAdapter branchesPacketsAdapter;
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
             @Override
             public void onClick(View view) {
                 String packetId =((EditText) findViewById(R.id.debugPacketIdToRemove)).getText().toString();
-                userAppendedPacketActions.DismissPendingPacket(new Packet(packetId));
+                balance.dismissPendingPacket(new Packet(packetId));
                 updateRecyclerView();
             }
         });
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
                         packetId,
                         new Date()
                 );
-                userAppendedPacketActions.addPendingPacket(pendingPacket);
+                balance.addPendingPacket(pendingPacket);
                 updateRecyclerView();
             }
         });
@@ -131,6 +130,20 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
 
         branchesPacketsAdapter.setClickedListener(this);
 
+        DismissPendingMessageItemTouchHelper itemTouchHelperCallback = new DismissPendingMessageItemTouchHelper(
+                0,
+                ItemTouchHelper.LEFT,
+                new DismissPendingMessageItemTouchHelper.RecyclerItemTouchHelperListener() {
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+                        String swipedPacketId = ((BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder).postalIdTV.getText().toString();
+                        balance.dismissPendingPacket(new Packet(swipedPacketId));
+                        branchesPacketsAdapter.removeItemAt(position);
+                    }
+                });
+
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
         recyclerView.setAdapter(branchesPacketsAdapter);
     }
 
@@ -138,12 +151,9 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     void initLocals() {
         branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
-        userAppendedPacketActions = new TemporaryUserAppendedPacketActions(
-                branchesProvider
-        );
 
         balance = new DynamicPostPacketsBalance(
-                userAppendedPacketActions,
+                new TemporaryUserAppendedPacketActions(branchesProvider),
                 SMSProvider.from(this, "%1111%"), // todo: change to "Israel Post"
                 branchesProvider,
                 KeywordsMessagesSorter.getDefault(),

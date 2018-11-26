@@ -25,7 +25,7 @@ public class TemporaryUserAppendedPacketActions implements UserAppendedPacketAct
     }
 
     @Override
-    public void DismissPendingPacket(Packet packet) {
+    public void dismissPendingPacket(Packet packet) {
         if (!pendingPackets.remove(packet)) {
             dismissedPackets.add(packet);
         }

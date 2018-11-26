@@ -39,6 +39,21 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
         this.clickedListener = listener;
     }
 
+    public void removeItemAt(int position) {
+        int sizeBeforeRemoval = dataset.size();
+        updateDatasetFromPendingPacketsMap();
+        int sizeAfterRemoval = dataset.size();
+        if(dataset.size() == 0) {
+            notifyDataSetChanged();
+            return;
+        }
+        if(sizeBeforeRemoval - sizeAfterRemoval > 1) {
+            notifyItemRemoved(position - 1);
+        }
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(Math.max(position, 0), dataset.size());
+    }
+
     interface ItemClickedListener {
         void onBranchClicked(Branch branch);
         void onPacketClicked(PendingPacket packet);
@@ -59,6 +74,7 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
                 updateDatasetFromPendingPacketsMap();
             }
         });
+
     }
 
     private void updateDatasetFromPendingPacketsMap() {
@@ -78,18 +94,18 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     class PendingPacketViewHolder extends RecyclerView.ViewHolder {
-        ViewGroup container;
+        ViewGroup packetForegroundLayout;
         TextView postalIdTV;
         TextView packetBranchIdTV;
         TextView lastNoticeTV;
 
-        PendingPacketViewHolder(ViewGroup container,
+        PendingPacketViewHolder(ViewGroup packetContainer, ViewGroup packetForegroundLayout,
                                 TextView postalIdTV,
                                 TextView packetBranchIdTV,
                                 TextView lastNoticeTV){
-            super(container);
+            super(packetContainer);
 
-            this.container = container;
+            this.packetForegroundLayout = packetForegroundLayout;
             this.postalIdTV = postalIdTV;
             this.packetBranchIdTV = packetBranchIdTV;
             this.lastNoticeTV = lastNoticeTV;
@@ -129,6 +145,7 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
 
                     return new PendingPacketViewHolder(
                         packetContainer,
+                        (ViewGroup) packetContainer.findViewById(R.id.packetForegroundLayout),
                         (TextView) packetContainer.findViewById(R.id.postalIdTV),
                         (TextView) packetContainer.findViewById(R.id.packetBranchIdTV),
                         (TextView) packetContainer.findViewById(R.id.lastNoticeTV)
@@ -171,7 +188,7 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
                     PendingPacketViewHolder packetViewHolder = (PendingPacketViewHolder) holder;
                     final PendingPacket packet = (PendingPacket) dataset.get(position);
 
-                    packetViewHolder.container.setOnClickListener(new View.OnClickListener() {
+                    packetViewHolder.packetForegroundLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if(clickedListener != null) {

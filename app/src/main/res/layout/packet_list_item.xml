@@ -1,47 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:padding="5dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<FrameLayout
     android:layout_height="wrap_content"
-    android:background="#eee"
-    >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent">
 
-    <TextView android:id="@+id/packetBranchIdTV"
-        android:layout_marginTop="5dp"
-        android:gravity="right"
-        android:textColor="#111"
-        android:layout_marginHorizontal="5dp"
+    <RelativeLayout
+        android:background="#f55"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="10dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="Picked Up!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/packetForegroundLayout"
+        android:padding="5dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ג1234"
-        android:textSize="20sp"
-        />
+        android:background="#eee"
+        >
 
-    <TextView android:id="@+id/postalIdTV"
-        android:gravity="right"
-        android:textColor="#666"
-        android:layout_below="@id/packetBranchIdTV"
-        android:layout_marginHorizontal="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="YY511282674IL"
-        android:textSize="10sp"
-        android:layout_marginBottom="5dp"
-        />
+        <TextView android:id="@+id/packetBranchIdTV"
+            android:layout_marginTop="5dp"
+            android:gravity="right"
+            android:textColor="#111"
+            android:layout_marginHorizontal="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ג1234"
+            android:textSize="20sp"
+            />
 
-    <TextView
-        android:id="@+id/lastNoticeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="5dp"
-        android:gravity="left"
-        android:layout_marginTop="10dp"
-        android:text="3 days ago"
-        android:textColor="#999"
-        android:textSize="10sp"
-        />
+        <TextView android:id="@+id/postalIdTV"
+            android:gravity="right"
+            android:textColor="#666"
+            android:layout_below="@id/packetBranchIdTV"
+            android:layout_marginHorizontal="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YY511282674IL"
+            android:textSize="10sp"
+            android:layout_marginBottom="5dp"
+            />
+
+        <TextView
+            android:id="@+id/lastNoticeTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:gravity="left"
+            android:layout_marginTop="10dp"
+            android:text="3 days ago"
+            android:textColor="#999"
+            android:textSize="10sp"
+            />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>
