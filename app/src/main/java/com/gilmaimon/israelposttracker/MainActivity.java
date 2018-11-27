@@ -27,8 +27,8 @@ import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Branches.JsonBranches;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
-import com.gilmaimon.israelposttracker.PacketsBalance.DynamicPostPacketsBalance;
-import com.gilmaimon.israelposttracker.PacketsBalance.PostPacketsBalance;
+import com.gilmaimon.israelposttracker.Balance.DynamicPostPacketsBalance;
+import com.gilmaimon.israelposttracker.Balance.PostPacketsBalance;
 import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
 import com.gilmaimon.israelposttracker.SMS.IncomingIsraelPostSMSMessages;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
 
         balance = new DynamicPostPacketsBalance(
                 new TemporaryUserAppendedPacketActions(branchesProvider),
-                SMSProvider.from(this, "%1111%"), // todo: change to "Israel Post"
+                SMSProvider.from(this, "Israel Post"), // todo: change to "Israel Post"
                 branchesProvider,
                 KeywordsMessagesSorter.getDefault(),
                 new RegexPostMessageParser()

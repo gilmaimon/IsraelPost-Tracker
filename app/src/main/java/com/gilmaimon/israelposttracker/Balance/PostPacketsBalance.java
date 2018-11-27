@@ -1,4 +1,4 @@
-package com.gilmaimon.israelposttracker.PacketsBalance;
+package com.gilmaimon.israelposttracker.Balance;
 
 import android.support.annotation.NonNull;
 
@@ -7,7 +7,6 @@ import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.UserAppended.UserAppendedPacketActions;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 public interface PostPacketsBalance extends UserAppendedPacketActions {

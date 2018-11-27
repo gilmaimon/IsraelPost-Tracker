@@ -1,4 +1,4 @@
-package com.gilmaimon.israelposttracker.PacketsBalance;
+package com.gilmaimon.israelposttracker.Balance;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
