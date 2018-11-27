@@ -22,18 +22,18 @@ import android.widget.Toast;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.Permissions;
 import com.gilmaimon.israelposttracker.AndroidUtils.RawResource;
+import com.gilmaimon.israelposttracker.Balance.DynamicPostPacketsBalance;
+import com.gilmaimon.israelposttracker.Balance.PostPacketsBalance;
 import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Branches.JsonBranches;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
-import com.gilmaimon.israelposttracker.Balance.DynamicPostPacketsBalance;
-import com.gilmaimon.israelposttracker.Balance.PostPacketsBalance;
 import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
 import com.gilmaimon.israelposttracker.SMS.IncomingIsraelPostSMSMessages;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
-import com.gilmaimon.israelposttracker.UserAppended.TemporaryUserAppendedPacketActions;
+import com.gilmaimon.israelposttracker.UserAppended.SQLiteUserAppendedActions;
 
 import java.util.Date;
 
@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
                 .unregisterReceiver(newSmsMessageReceiver);
     }
 
-    private BranchesProvider branchesProvider;
     private PostPacketsBalance balance;
     private BranchesAndPacketsAdapter branchesPacketsAdapter;
 
@@ -150,11 +149,11 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     void initLocals() {
-        branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
+        BranchesProvider branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
 
         balance = new DynamicPostPacketsBalance(
-                new TemporaryUserAppendedPacketActions(branchesProvider),
-                SMSProvider.from(this, "Israel Post"), // todo: change to "Israel Post"
+                new SQLiteUserAppendedActions(this, false),
+                SMSProvider.from(this, "Israel Post"), // todo: change to "Israel Post" or "%1111% for debug
                 branchesProvider,
                 KeywordsMessagesSorter.getDefault(),
                 new RegexPostMessageParser()
