@@ -28,7 +28,9 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
     private final BranchesProvider branchesProvider;
     private final PostMessageSorter sorter;
     private final PostMessageParser parser;
+
     private Map<Branch, Set<PendingPacket>> allPendingMessages;
+
     private UserAppendedPacketActions userAppendedPacketActions;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -72,7 +74,14 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
         reloadPendingPackets();
     }
 
-    private void _addPendingPacket(PendingPacket pendingPacket) {
+    private void _addPendingPacket(PendingPacket pendingPacket, Set<PendingPacket> seenPendingPackets) {
+        // This trick is for making sure the same packet (or postal id) dosent exist in 2 branches in the same time
+        // so when a packet was already seen before (same postal id) we dismiss it from everywhere in our branches map
+        // and it can be added to the current branch as it is the latest one
+        if(seenPendingPackets.contains(pendingPacket)) {
+            _dismissPacket(pendingPacket);
+        } else seenPendingPackets.add(pendingPacket);
+
         Branch branch = branchesProvider.getBranch(pendingPacket.getBranchId());
         if(!allPendingMessages.containsKey(branch)) {
             allPendingMessages.put(branch, new HashSet<PendingPacket>());
@@ -81,10 +90,10 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
         allPendingMessages.get(branch).add(pendingPacket);
     }
 
-    private boolean processPendingPacket(SMSMessage message) {
+    private boolean processPendingPacket(SMSMessage message, Set<PendingPacket> seenPendingPackets) {
         try {
             PendingPacket pendingPacket = parser.parseAwaitingPacketMessage(message);
-            _addPendingPacket(pendingPacket);
+            _addPendingPacket(pendingPacket, seenPendingPackets);
             return true;
         } catch (UnknownMessageFormat unknownMessageFormat) {
             unknownMessageFormat.printStackTrace();
@@ -117,10 +126,11 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
     private void reloadPendingPackets() {
         allPendingMessages.clear();
 
+        Set<PendingPacket> seenPendingPackets = new HashSet<>();
         for(SMSMessage message : smsProvider.getAllMessages()) {
             switch (sorter.sortMessage(message.getMessage())) {
                 case AwaitingPickup:
-                    processPendingPacket(message);
+                    processPendingPacket(message, seenPendingPackets);
                     break;
 
                 case PickedUp:
@@ -135,7 +145,7 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
 
         // Add packets that the user added manually
         for(PendingPacket pendingPacket : userAppendedPacketActions.getPendingPackets()) {
-            _addPendingPacket(pendingPacket);
+            _addPendingPacket(pendingPacket, seenPendingPackets);
         }
 
         // remove packets that the user removed manually
