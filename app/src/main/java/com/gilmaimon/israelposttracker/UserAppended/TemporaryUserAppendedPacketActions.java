@@ -13,13 +13,10 @@ import java.util.Set;
 
 public class TemporaryUserAppendedPacketActions implements UserAppendedPacketActions {
 
-    private BranchesProvider branchesProvider;
-
     private Set<Packet> dismissedPackets;
     private Set<PendingPacket> pendingPackets;
 
-    public TemporaryUserAppendedPacketActions(@NonNull BranchesProvider branchesProvider) {
-        this.branchesProvider = branchesProvider;
+    public TemporaryUserAppendedPacketActions() {
         this.dismissedPackets = new HashSet<>();
         this.pendingPackets = new HashSet<>();
     }
