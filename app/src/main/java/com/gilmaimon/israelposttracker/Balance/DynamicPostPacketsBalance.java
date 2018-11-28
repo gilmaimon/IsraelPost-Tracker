@@ -14,6 +14,7 @@ import com.gilmaimon.israelposttracker.Parsing.UnknownMessageFormat;
 import com.gilmaimon.israelposttracker.SMS.SMSMessage;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.PostMessageSorter;
+import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 import com.gilmaimon.israelposttracker.UserAppended.UserAppendedPacketActions;
 
 import java.util.HashMap;
@@ -156,9 +157,10 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void dismissPendingPacket(Packet packet) {
-        userAppendedPacketActions.dismissPendingPacket(packet);
+    public UndoableAction dismissPendingPacket(Packet packet) {
+        UndoableAction result = userAppendedPacketActions.dismissPendingPacket(packet);
         notifyStateChanged();
+        return result;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

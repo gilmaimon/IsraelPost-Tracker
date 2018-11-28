@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -34,6 +36,7 @@ import com.gilmaimon.israelposttracker.SMS.IncomingIsraelPostSMSMessages;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.UserAppended.SQLiteUserAppendedActions;
+import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 
 import java.util.Date;
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
 
     private Permissions.OnRequestPermissionHandler mSmsPermissionHandler;
     private BroadcastReceiver newSmsMessageReceiver;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onResume() {
@@ -86,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        coordinatorLayout = findViewById(R.id.coordinatorLayout);
+
         findViewById(R.id.debugRemoveBTN).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
                 updateRecyclerView();
             }
         });
+
+
     }
 
     private void initRecyclerView() {
@@ -136,8 +144,18 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
                         String swipedPacketId = ((BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder).postalIdTV.getText().toString();
-                        balance.dismissPendingPacket(new Packet(swipedPacketId));
+                        final UndoableAction undoableDismiss = balance.dismissPendingPacket(new Packet(swipedPacketId));
                         branchesPacketsAdapter.removeItemAt(position);
+
+                        Snackbar snackbar = Snackbar.make(coordinatorLayout, "This is a SnackBar", Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                undoableDismiss.undo();
+                                updateRecyclerView();
+                            }
+                        });
+                        snackbar.show();
                     }
                 });
 

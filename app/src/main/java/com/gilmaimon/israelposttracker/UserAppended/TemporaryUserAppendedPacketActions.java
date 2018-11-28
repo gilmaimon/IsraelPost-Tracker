@@ -1,8 +1,6 @@
 package com.gilmaimon.israelposttracker.UserAppended;
 
-import android.support.annotation.NonNull;
-
-import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
+import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 
@@ -22,10 +20,14 @@ public class TemporaryUserAppendedPacketActions implements UserAppendedPacketAct
     }
 
     @Override
-    public void dismissPendingPacket(Packet packet) {
-        if (!pendingPackets.remove(packet)) {
-            dismissedPackets.add(packet);
-        }
+    public UndoableAction dismissPendingPacket(final Packet packet) {
+        dismissedPackets.add(packet);
+        return new UndoableAction() {
+            @Override
+            public void undo() {
+                dismissedPackets.remove(packet);
+            }
+        };
     }
 
     @Override

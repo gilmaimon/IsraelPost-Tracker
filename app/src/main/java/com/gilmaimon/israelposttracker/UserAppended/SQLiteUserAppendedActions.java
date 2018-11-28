@@ -5,13 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
+import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserAppendedPacketActions {
 
@@ -30,7 +32,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
             "CREATE TABLE " + TABLE_NAME + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_TYPE + " TEXT," +
-                    COLUMN_POST_ID + " TEXT UNIQUE," +
+                    COLUMN_POST_ID + " TEXT," +
                     COLUMN_BRANCH_ID + " INTEGER," +
                     COLUMN_LAST_NOTICE + " INTEGER," +
                     COLUMN_BRANCH_PLACEMENT_ID + " TEXT)";
@@ -61,10 +63,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
     }
 
     @Override
-    public void dismissPendingPacket(Packet packet) {
-        // remove packet actions with the same postal id in the database
-        getWritableDatabase().delete(TABLE_NAME, COLUMN_POST_ID + " = ?", new String[]{packet.getPostId()});
-
+    public UndoableAction dismissPendingPacket(final Packet packet) {
         // construct the new entry
         ContentValues dismissedPacket = new ContentValues();
         dismissedPacket.put(COLUMN_TYPE, TYPE_DISMISS);
@@ -75,6 +74,15 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
 
         // add the new entry for the dismissed packet
         getWritableDatabase().insert(TABLE_NAME, null, dismissedPacket);
+        return new UndoableAction() {
+            @Override
+            public void undo() {
+                getWritableDatabase().delete(
+                        TABLE_NAME,
+                        COLUMN_POST_ID + " = ? AND " + COLUMN_TYPE + " = ?",
+                        new String[]{packet.getPostId(), TYPE_DISMISS});
+            }
+        };
     }
 
     @Override
@@ -116,8 +124,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
         return packets;
     }
 
-    @Override
-    public List<PendingPacket> getPendingPackets() {
+    private List<PendingPacket> getAllPendingPacketEntries() {
         List<PendingPacket> packets = new ArrayList<>();
 
         Cursor pendingPacketsCursor = getReadableDatabase().query(
@@ -141,6 +148,18 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
 
         pendingPacketsCursor.close();
         return packets;
+    }
+
+    @Override
+    public List<PendingPacket> getPendingPackets() {
+        List<PendingPacket> pendingPacketEntries = getAllPendingPacketEntries();
+        List<Packet> dismissedPacketEntries = getDismissedPackets();
+        Set<PendingPacket> pendingPackets = new HashSet<>(pendingPacketEntries);
+        for(Packet dismissedPacket : dismissedPacketEntries) {
+            pendingPackets.remove(dismissedPacket);
+        }
+
+        return new ArrayList<>(pendingPackets);
     }
 
 }
