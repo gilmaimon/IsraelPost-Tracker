@@ -14,6 +14,10 @@ public class PendingPacket extends Packet {
         this.lastNotice = lastNotice;
     }
 
+    public PendingPacket(String postId, int branchId, String branchPacketId, long lastNotice) {
+        this(postId, branchId, branchPacketId, new Date(lastNotice));
+    }
+
     public void setLastNotice(Date date) {
         this.lastNotice = date;
     }
