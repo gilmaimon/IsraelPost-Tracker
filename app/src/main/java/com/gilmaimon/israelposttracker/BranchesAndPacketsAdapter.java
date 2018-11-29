@@ -54,14 +54,14 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
         notifyItemRangeChanged(Math.max(position, 0), dataset.size());
     }
 
-    interface ItemClickedListener {
+    public interface ItemClickedListener {
         void onBranchClicked(Branch branch);
         void onPacketClicked(PendingPacket packet);
     }
 
     private ItemClickedListener clickedListener;
 
-    BranchesAndPacketsAdapter(@NonNull Context context, @NonNull PostPacketsBalance balance) {
+    public BranchesAndPacketsAdapter(@NonNull Context context, @NonNull PostPacketsBalance balance) {
         this.context = context;
         this.balance = balance;
         this.dataset = new ArrayList<>();

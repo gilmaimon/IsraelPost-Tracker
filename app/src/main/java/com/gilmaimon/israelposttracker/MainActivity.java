@@ -1,12 +1,15 @@
 package com.gilmaimon.israelposttracker;
 
 import android.Manifest;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.Permissions;
@@ -33,6 +36,10 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.mainToolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+
         mSmsPermissionHandler = Permissions.RequirePermission(
                 this,
                 new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS},
@@ -40,13 +47,12 @@ public class MainActivity extends AppCompatActivity  {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void permissionGranted(String[] permissions) {
-                        Toast.makeText(MainActivity.this, "Got it, tnx!", Toast.LENGTH_LONG).show();
                         showBalanceFragment();
                     }
 
                     @Override
                     public void permissionDenied(String[] permissions) {
-                        Toast.makeText(MainActivity.this, "Gotta have dat permission", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "App must have SMS permissions to operate.", Toast.LENGTH_LONG).show();
                         finish();
                     }
                 }
