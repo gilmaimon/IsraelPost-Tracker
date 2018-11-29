@@ -27,29 +27,47 @@
         android:layout_height="wrap_content"
         android:background="#eee"
         >
+        <ImageView
+            android:layout_margin="10dp"
+            android:id="@+id/icPacketIMG"
+            android:src="@drawable/ic_packet"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
 
-        <TextView android:id="@+id/packetBranchIdTV"
-            android:layout_marginTop="5dp"
-            android:gravity="right"
-            android:textColor="#111"
-            android:layout_marginHorizontal="5dp"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_toLeftOf="@+id/icPacketIMG"
+            android:id="@+id/textBlock"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ג1234"
-            android:textSize="20sp"
-            />
+            >
+            <TextView android:id="@+id/packetBranchIdTV"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:textColor="#111"
+                android:layout_alignParentRight="true"
+                android:layout_marginHorizontal="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ג1234"
+                android:textSize="20sp"
+                />
+            <TextView android:id="@+id/postalIdTV"
+                android:gravity="right"
+                android:textColor="#666"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/packetBranchIdTV"
+                android:layout_marginHorizontal="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YY511282674IL"
+                android:textSize="10sp"
+                android:layout_marginBottom="5dp"
+                />
 
-        <TextView android:id="@+id/postalIdTV"
-            android:gravity="right"
-            android:textColor="#666"
-            android:layout_below="@id/packetBranchIdTV"
-            android:layout_marginHorizontal="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="YY511282674IL"
-            android:textSize="10sp"
-            android:layout_marginBottom="5dp"
-            />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/lastNoticeTV"

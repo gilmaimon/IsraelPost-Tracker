@@ -6,28 +6,50 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView android:id="@+id/branchTitleTV"
-        android:layout_marginTop="15dp"
-        android:gravity="start"
-        android:textColor="#111"
-        android:layout_marginHorizontal="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="יחידת דואר ממס - בן בן"
-        android:textSize="22sp"
-        />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView android:id="@+id/branchAddressTV"
-        android:gravity="start"
-        android:textColor="#666"
-        android:layout_below="@id/branchTitleTV"
-        android:layout_marginHorizontal="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ההסתדרות 40, מיקוד: 7864118 אשקלון"
-        android:textSize="10sp"
-        android:layout_marginBottom="25dp"
-        />
+        <ImageView android:id="@+id/postIconIMG"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_location_city"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="5dp"
+            />
+
+        <RelativeLayout
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="35dp"
+
+            android:layout_marginRight="10dp"
+            android:id="@+id/blockTitleSubtitle"
+            android:layout_toLeftOf="@+id/postIconIMG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView android:id="@+id/branchTitleTV"
+                android:gravity="right"
+                android:textColor="@color/primaryText"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="יחידת דואר ממס - בן בן"
+                android:textSize="25sp"
+                />
+
+            <TextView android:id="@+id/branchAddressTV"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/secondaryText"
+                android:layout_below="@id/branchTitleTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ההסתדרות 40, מיקוד: 7864118 אשקלון"
+                android:textSize="13sp"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/branchIdTV"
