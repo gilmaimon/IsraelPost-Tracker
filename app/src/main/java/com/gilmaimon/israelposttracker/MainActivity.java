@@ -19,6 +19,7 @@ import com.gilmaimon.israelposttracker.Balance.BalancePresenter;
 import com.gilmaimon.israelposttracker.Balance.DynamicPostPacketsBalance;
 import com.gilmaimon.israelposttracker.Balance.PacketsBalanceContract;
 import com.gilmaimon.israelposttracker.Balance.PostPacketsBalance;
+import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Branches.JsonBranches;
 import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
 import com.gilmaimon.israelposttracker.SMS.NewSmsBroadcastListener;
@@ -63,16 +64,17 @@ public class MainActivity extends AppCompatActivity  {
     private void showBalanceFragment() {
         NewSmsBroadcastListener newSmsBroadcastListener = new NewSmsBroadcastListener(this);
 
+        BranchesProvider branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
         PostPacketsBalance balance = new DynamicPostPacketsBalance(
                 new SQLiteUserAppendedActions(this, false),
-                SMSProvider.from(this, "%1111%"), // todo: change to "Israel Post" or "%1111% for debug
-                new JsonBranches(new RawResource(this, R.raw.branches).readAll()),
+                SMSProvider.from(this, "%Post%"), // todo: change to "Israel Post" or "%1111% for debug
+                branchesProvider,
                 KeywordsMessagesSorter.getDefault(),
                 new RegexPostMessageParser()
         );
 
         PacketsBalanceContract.View balanceFragment = new BalanceFragment();
-        PacketsBalanceContract.Presenter balancePresenter = new BalancePresenter(balanceFragment, balance, newSmsBroadcastListener);
+        PacketsBalanceContract.Presenter balancePresenter = new BalancePresenter(balanceFragment, branchesProvider, balance, newSmsBroadcastListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.contentPlaceholder, (Fragment) balanceFragment).commit();
     }

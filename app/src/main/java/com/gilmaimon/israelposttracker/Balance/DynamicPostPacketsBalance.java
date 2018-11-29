@@ -53,14 +53,18 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
         Log.v("Done", "Done");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @NonNull
     @Override
     public HashMap<Branch, Set<PendingPacket>> getAllPendingPackets() {
+        notifyStateChanged();
         return new HashMap<>(allPendingMessages);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public Set<PendingPacket> getPendingFromBranch(int branchId) {
+        notifyStateChanged();
         for(Branch branch : allPendingMessages.keySet()) {
             if(branch.getId() == branchId) {
                 return new HashSet<>(allPendingMessages.get(branch));

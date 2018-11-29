@@ -2,6 +2,7 @@ package com.gilmaimon.israelposttracker.Balance;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 import com.gilmaimon.israelposttracker.Branches.Branch;
+import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.BranchesAndPacketsAdapter;
 import com.gilmaimon.israelposttracker.DismissPendingPacketHelper;
 import com.gilmaimon.israelposttracker.Packets.Packet;
@@ -23,6 +25,7 @@ import com.gilmaimon.israelposttracker.R;
 public class BalanceFragment extends Fragment implements PacketsBalanceContract.View {
 
     private BranchesAndPacketsAdapter branchesPacketsAdapter;
+    private RecyclerView recyclerView;
 
     // Balance is assumed to be set when view is rendered
     private PostPacketsBalance balance;
@@ -51,6 +54,27 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initRecyclerView();
+
+        final FloatingActionButton addManuallyFab = getView().findViewById(R.id.addPostItemFAB);
+        addManuallyFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.newPostEntryClicked();
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0){
+                    addManuallyFab.hide();
+                } else{
+                    addManuallyFab.show();
+                }
+
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private RecyclerView findAndInitRecyclerView() {
@@ -66,7 +90,7 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = findAndInitRecyclerView();
+        recyclerView = findAndInitRecyclerView();
         branchesPacketsAdapter = new BranchesAndPacketsAdapter(
                 getContext(),
                 balance
@@ -121,6 +145,17 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
             }
         });
         snackbar.show();
+    }
+
+    @Override
+    public void showNewPendingPacketMenu(BranchesProvider provider) {
+        NewPendingPacketDialog dialog = new NewPendingPacketDialog(getContext(), provider, new NewPendingPacketDialog.OnPendingPacketSubmit() {
+            @Override
+            public void onSubmit(String branchPlacement, int branch) {
+                presenter.newPendingPacketSubmitted(null, branch, branchPlacement);
+            }
+        });
+        dialog.show();
     }
 
     private void updateRecyclerView() {

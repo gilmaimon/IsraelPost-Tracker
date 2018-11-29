@@ -4,19 +4,25 @@ import android.os.Handler;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 import com.gilmaimon.israelposttracker.Branches.Branch;
+import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.SMS.NewSmsBroadcastListener;
+
+import java.util.Date;
 
 public class BalancePresenter implements PacketsBalanceContract.Presenter, NewSmsBroadcastListener.NewSmsListener {
 
     private PacketsBalanceContract.View view;
     private PostPacketsBalance balance;
     private NewSmsBroadcastListener newSmsBroadcastListener;
+    private BranchesProvider branchProvider;
 
-    public BalancePresenter(PacketsBalanceContract.View view, PostPacketsBalance balance, NewSmsBroadcastListener newSmsBroadcastListener) {
+    public BalancePresenter(PacketsBalanceContract.View view, BranchesProvider branchProvider,
+                            PostPacketsBalance balance, NewSmsBroadcastListener newSmsBroadcastListener) {
         this.view = view;
         this.balance = balance;
         this.newSmsBroadcastListener = newSmsBroadcastListener;
+        this.branchProvider = branchProvider;
         view.setPresenter(this);
         view.setBalance(balance);
 
@@ -30,7 +36,6 @@ public class BalancePresenter implements PacketsBalanceContract.Presenter, NewSm
             @Override
             public void undo() {
                 undoCallback.undo();
-                balance.notifyStateChanged();
                 view.balanceChanged();
             }
         });
@@ -44,6 +49,20 @@ public class BalancePresenter implements PacketsBalanceContract.Presenter, NewSm
     @Override
     public void onBranchClicked(Branch branch) {
         // Nothing to do
+    }
+
+    @Override
+    public void newPostEntryClicked() {
+        view.showNewPendingPacketMenu(branchProvider);
+    }
+
+    @Override
+    public void newPendingPacketSubmitted(String postalID, int branchId, String branchPacketId) {
+        if(postalID == null) {
+            postalID = branchPacketId + "@" + branchId;
+        }
+        balance.addPendingPacket(new PendingPacket(postalID, branchId, branchPacketId, new Date()));
+        view.balanceChanged();
     }
 
     @Override
@@ -61,7 +80,6 @@ public class BalancePresenter implements PacketsBalanceContract.Presenter, NewSm
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                balance.notifyStateChanged();
                 view.balanceChanged();
             }
         }, 100);
