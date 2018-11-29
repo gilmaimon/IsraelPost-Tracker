@@ -1,4 +1,4 @@
-package com.gilmaimon.israelposttracker;
+package com.gilmaimon.israelposttracker.Balance;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,6 +13,7 @@ import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.Branches.BranchViewHolder;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.Balance.PostPacketsBalance;
+import com.gilmaimon.israelposttracker.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PacketsBalanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int ITEM_TYPE_BRANCH = 1;
     private final int ITEM_TYPE_POSTAL_ITEM = 2;
@@ -61,7 +62,7 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private ItemClickedListener clickedListener;
 
-    public BranchesAndPacketsAdapter(@NonNull Context context, @NonNull PostPacketsBalance balance) {
+    public PacketsBalanceAdapter(@NonNull Context context, @NonNull PostPacketsBalance balance) {
         this.context = context;
         this.balance = balance;
         this.dataset = new ArrayList<>();

@@ -16,15 +16,13 @@ import android.view.ViewGroup;
 import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
-import com.gilmaimon.israelposttracker.BranchesAndPacketsAdapter;
-import com.gilmaimon.israelposttracker.DismissPendingPacketHelper;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.R;
 
 public class BalanceFragment extends Fragment implements PacketsBalanceContract.View {
 
-    private BranchesAndPacketsAdapter branchesPacketsAdapter;
+    private PacketsBalanceAdapter branchesPacketsAdapter;
     private RecyclerView recyclerView;
 
     // Balance is assumed to be set when view is rendered
@@ -91,12 +89,12 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
 
     private void initRecyclerView() {
         recyclerView = findAndInitRecyclerView();
-        branchesPacketsAdapter = new BranchesAndPacketsAdapter(
+        branchesPacketsAdapter = new PacketsBalanceAdapter(
                 getContext(),
                 balance
         );
 
-        branchesPacketsAdapter.setClickedListener(new BranchesAndPacketsAdapter.ItemClickedListener() {
+        branchesPacketsAdapter.setClickedListener(new PacketsBalanceAdapter.ItemClickedListener() {
             @Override
             public void onBranchClicked(Branch branch) {
                 presenter.onBranchClicked(branch);

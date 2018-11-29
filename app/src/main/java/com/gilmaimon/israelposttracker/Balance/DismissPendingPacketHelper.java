@@ -1,4 +1,4 @@
-package com.gilmaimon.israelposttracker;
+package com.gilmaimon.israelposttracker.Balance;
 
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +31,7 @@ public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
         if(viewHolder instanceof BranchViewHolder) return;
 
         if (viewHolder != null) {
-            final View foregroundView = ((BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
+            final View foregroundView = ((PacketsBalanceAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
             getDefaultUIUtil().onSelected(foregroundView);
         }
     }
@@ -42,7 +42,7 @@ public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
                                 int actionState, boolean isCurrentlyActive) {
         if(viewHolder instanceof BranchViewHolder) return;
 
-        final View foregroundView = ((BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
+        final View foregroundView = ((PacketsBalanceAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
         getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
     }
@@ -51,7 +51,7 @@ public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         if(viewHolder instanceof BranchViewHolder) return;
 
-        final View foregroundView = ((BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
+        final View foregroundView = ((PacketsBalanceAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
         getDefaultUIUtil().clearView(foregroundView);
     }
 
@@ -61,7 +61,7 @@ public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
                             int actionState, boolean isCurrentlyActive) {
         if(viewHolder instanceof BranchViewHolder) return;
 
-        final View foregroundView = ((BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
+        final View foregroundView = ((PacketsBalanceAdapter.PendingPacketViewHolder) viewHolder).packetForegroundLayout;
 
         getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
@@ -71,7 +71,7 @@ public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         if(viewHolder instanceof BranchViewHolder) return;
 
-        BranchesAndPacketsAdapter.PendingPacketViewHolder holder = (BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder;
+        PacketsBalanceAdapter.PendingPacketViewHolder holder = (PacketsBalanceAdapter.PendingPacketViewHolder) viewHolder;
 
         listener.onPendingPacketSwiped(holder.packet, viewHolder.getAdapterPosition());
     }
