@@ -94,6 +94,7 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     class PendingPacketViewHolder extends RecyclerView.ViewHolder {
+        public PendingPacket packet;
         ViewGroup packetForegroundLayout;
         TextView postalIdTV;
         TextView packetBranchIdTV;
@@ -187,6 +188,8 @@ public class BranchesAndPacketsAdapter extends RecyclerView.Adapter<RecyclerView
                 case ITEM_TYPE_POSTAL_ITEM:
                     PendingPacketViewHolder packetViewHolder = (PendingPacketViewHolder) holder;
                     final PendingPacket packet = (PendingPacket) dataset.get(position);
+
+                    packetViewHolder.packet = packet;
 
                     packetViewHolder.packetForegroundLayout.setOnClickListener(new View.OnClickListener() {
                         @Override

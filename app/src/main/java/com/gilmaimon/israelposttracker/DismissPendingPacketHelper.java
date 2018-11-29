@@ -6,12 +6,18 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.gilmaimon.israelposttracker.Branches.BranchViewHolder;
+import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 
-public class DismissPendingMessageItemTouchHelper extends ItemTouchHelper.SimpleCallback {
-    private RecyclerItemTouchHelperListener listener;
+public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
+    private PacketSwipedListener listener;
 
-    public DismissPendingMessageItemTouchHelper (int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener listener) {
+    public DismissPendingPacketHelper(int dragDirs, int swipeDirs, PacketSwipedListener listener) {
         super(dragDirs, swipeDirs);
+        this.listener = listener;
+    }
+
+    public DismissPendingPacketHelper(PacketSwipedListener listener) {
+        super(0, ItemTouchHelper.LEFT);
         this.listener = listener;
     }
 
@@ -65,7 +71,9 @@ public class DismissPendingMessageItemTouchHelper extends ItemTouchHelper.Simple
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         if(viewHolder instanceof BranchViewHolder) return;
 
-        listener.onSwiped(viewHolder, direction, viewHolder.getAdapterPosition());
+        BranchesAndPacketsAdapter.PendingPacketViewHolder holder = (BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder;
+
+        listener.onPendingPacketSwiped(holder.packet, viewHolder.getAdapterPosition());
     }
 
     @Override
@@ -73,7 +81,7 @@ public class DismissPendingMessageItemTouchHelper extends ItemTouchHelper.Simple
         return super.convertToAbsoluteDirection(flags, layoutDirection);
     }
 
-    public interface RecyclerItemTouchHelperListener {
-        void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
+    public interface PacketSwipedListener {
+        void onPendingPacketSwiped(PendingPacket packet, int position);
     }
 }

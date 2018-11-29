@@ -2,17 +2,12 @@ package com.gilmaimon.israelposttracker;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +27,7 @@ import com.gilmaimon.israelposttracker.Branches.JsonBranches;
 import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
-import com.gilmaimon.israelposttracker.SMS.IncomingIsraelPostSMSMessages;
+import com.gilmaimon.israelposttracker.SMS.NewSmsBroadcastListener;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.UserAppended.SQLiteUserAppendedActions;
@@ -40,47 +35,13 @@ import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements Permissions.PermissionCallback, BranchesAndPacketsAdapter.ItemClickedListener {
+
+public class MainActivity extends AppCompatActivity implements
+        BranchesAndPacketsAdapter.ItemClickedListener,
+        DismissPendingPacketHelper.PacketSwipedListener {
 
     private Permissions.OnRequestPermissionHandler mSmsPermissionHandler;
-    private BroadcastReceiver newSmsMessageReceiver;
-    private CoordinatorLayout coordinatorLayout;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSmsPermissionHandler = Permissions.RequirePermission(
-                this,
-                new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS},
-                this
-        );
-
-        newSmsMessageReceiver = new BroadcastReceiver() {
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                updateRecyclerView();
-            }
-        };
-
-        LocalBroadcastManager
-                .getInstance(this)
-                .registerReceiver(
-                        newSmsMessageReceiver ,
-                        new IntentFilter(IncomingIsraelPostSMSMessages.NEW_SMS_BROADCAST_ACTION)
-                );
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager
-                .getInstance(this)
-                .unregisterReceiver(newSmsMessageReceiver);
-    }
-
+    private NewSmsBroadcastListener newSmsListener;
     private PostPacketsBalance balance;
     private BranchesAndPacketsAdapter branchesPacketsAdapter;
 
@@ -90,8 +51,52 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        coordinatorLayout = findViewById(R.id.coordinatorLayout);
+        newSmsListener = new NewSmsBroadcastListener(this, new NewSmsBroadcastListener.NewSmsListener() {
+            @Override
+            public void onSmsReceived() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateRecyclerView();
+                    }
+                }, 100);
+            }
+        });
 
+        mSmsPermissionHandler = Permissions.RequirePermission(
+                this,
+                new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS},
+                new Permissions.PermissionCallback() {
+                    @Override
+                    public void permissionGranted(String[] permissions) {
+                        Toast.makeText(MainActivity.this, "Got it, tnx!", Toast.LENGTH_LONG).show();
+                        initLocals();
+                    }
+
+                    @Override
+                    public void permissionDenied(String[] permissions) {
+                        Toast.makeText(MainActivity.this, "Gotta have dat permission", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                }
+        );
+
+        initDebugControllers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        newSmsListener.register();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        newSmsListener.unregister();
+    }
+
+    private void initDebugControllers() {
         findViewById(R.id.debugRemoveBTN).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,11 +121,9 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
                 updateRecyclerView();
             }
         });
-
-
     }
 
-    private void initRecyclerView() {
+    private RecyclerView findAndInitRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         recyclerView.setHasFixedSize(true);
@@ -129,7 +132,10 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
+        return recyclerView;
+    }
+    private void initRecyclerView() {
+        RecyclerView recyclerView = findAndInitRecyclerView();
         branchesPacketsAdapter = new BranchesAndPacketsAdapter(
                 this,
                 balance
@@ -137,27 +143,7 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
 
         branchesPacketsAdapter.setClickedListener(this);
 
-        DismissPendingMessageItemTouchHelper itemTouchHelperCallback = new DismissPendingMessageItemTouchHelper(
-                0,
-                ItemTouchHelper.LEFT,
-                new DismissPendingMessageItemTouchHelper.RecyclerItemTouchHelperListener() {
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-                        String swipedPacketId = ((BranchesAndPacketsAdapter.PendingPacketViewHolder) viewHolder).postalIdTV.getText().toString();
-                        final UndoableAction undoableDismiss = balance.dismissPendingPacket(new Packet(swipedPacketId));
-                        branchesPacketsAdapter.removeItemAt(position);
-
-                        Snackbar snackbar = Snackbar.make(coordinatorLayout, "This is a SnackBar", Snackbar.LENGTH_SHORT);
-                        snackbar.setAction("UNDO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                undoableDismiss.undo();
-                                updateRecyclerView();
-                            }
-                        });
-                        snackbar.show();
-                    }
-                });
+        DismissPendingPacketHelper itemTouchHelperCallback = new DismissPendingPacketHelper(this);
 
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
@@ -166,12 +152,12 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    void initLocals() {
+    private void initLocals() {
         BranchesProvider branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
 
         balance = new DynamicPostPacketsBalance(
                 new SQLiteUserAppendedActions(this, false),
-                SMSProvider.from(this, "Israel Post"), // todo: change to "Israel Post" or "%1111% for debug
+                SMSProvider.from(this, "%1111%"), // todo: change to "Israel Post" or "%1111% for debug
                 branchesProvider,
                 KeywordsMessagesSorter.getDefault(),
                 new RegexPostMessageParser()
@@ -190,19 +176,6 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
         mSmsPermissionHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    @Override
-    public void permissionGranted(String[] permissions) {
-        Toast.makeText(MainActivity.this, "Got it, tnx!", Toast.LENGTH_LONG).show();
-        initLocals();
-    }
-
-    @Override
-    public void permissionDenied(String[] permissions) {
-        Toast.makeText(MainActivity.this, "Gotta have dat permission", Toast.LENGTH_LONG).show();
-        finish();
-    }
-
     @Override
     public void onBranchClicked(Branch branch) {
         EditText debugBranchIdET = findViewById(R.id.debugBranchIdET);
@@ -213,5 +186,21 @@ public class MainActivity extends AppCompatActivity implements Permissions.Permi
     public void onPacketClicked(PendingPacket packet) {
         EditText debugPacketIdToRemove = findViewById(R.id.debugPacketIdToRemove);
         debugPacketIdToRemove.setText(packet.getPostId());
+    }
+
+    @Override
+    public void onPendingPacketSwiped(PendingPacket packet, int position) {
+        final UndoableAction undoableDismiss = balance.dismissPendingPacket(packet);
+        branchesPacketsAdapter.removeItemAt(position);
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinatorLayout), "Removed " + packet.getPostId(), Snackbar.LENGTH_SHORT);
+        snackbar.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                undoableDismiss.undo();
+                updateRecyclerView();
+            }
+        });
+        snackbar.show();
     }
 }
