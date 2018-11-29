@@ -81,6 +81,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
                         TABLE_NAME,
                         COLUMN_POST_ID + " = ? AND " + COLUMN_TYPE + " = ?",
                         new String[]{packet.getPostId(), TYPE_DISMISS});
+
             }
         };
     }

@@ -19,17 +19,23 @@ public class NewSmsBroadcastListener {
 
     private Context context;
     private BroadcastReceiver newSmsMessageReceiver;
+    private NewSmsListener listener;
 
-    public NewSmsBroadcastListener(@NonNull Context context, final NewSmsListener listener) {
+    public NewSmsBroadcastListener(@NonNull Context context) {
         this.context = context;
         newSmsMessageReceiver = new BroadcastReceiver() {
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onReceive(Context context, Intent intent) {
+                if(listener == null) return;
                 listener.onSmsReceived();
             }
         };
+    }
+
+    public void setListener(NewSmsListener listener) {
+        this.listener = listener;
     }
 
     public void register() {
