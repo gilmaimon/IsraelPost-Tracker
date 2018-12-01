@@ -6,4 +6,4 @@ App for keeping track of post items using Israel-Post SMS messages.
   - Keeping track of packets by manually adding and dismissing packets awaiting 
   
  
-![alt text](https://raw.githubusercontent.com/gilmaimon/IsraelPost-Tracker/master/Screenshot_1543702248.png | width=100)
+![alt text](https://raw.githubusercontent.com/gilmaimon/IsraelPost-Tracker/master/Screenshot_1543702248.png){:height="50%" width="50%"}
