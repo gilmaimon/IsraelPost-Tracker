@@ -33,6 +33,10 @@ public class PacketsBalanceAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<Object> dataset;
     private ItemClickedListener clickedListener;
 
+    public boolean isEmpty() {
+        return dataset.size() == 0;
+    }
+
     public void removeClickedListener() {
         clickedListener = null;
     }
@@ -67,6 +71,7 @@ public class PacketsBalanceAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.balance = balance;
         this.dataset = new ArrayList<>();
         updateDatasetFromPendingPacketsMap();
+        notifyDataSetChanged();
 
         registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

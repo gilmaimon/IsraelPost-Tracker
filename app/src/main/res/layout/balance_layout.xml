@@ -5,6 +5,33 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <RelativeLayout android:id="@+id/layoutNoItemsRL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView android:src="@drawable/ic_inbox"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <TextView android:text="No Pending Packets"
+                android:textSize="50sp"
+                android:textColor="#ccc"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
@@ -12,50 +39,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.gilmaimon.israelposttracker.MainActivity">
-
-        <LinearLayout android:visibility="gone"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText android:id="@+id/debugPacketIdToRemove"
-                android:layout_weight="1"
-                android:text="YY509713781IL"
-                android:hint="Message Index"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Button android:id="@+id/debugRemoveBTN"
-                android:layout_weight="3"
-                android:text="Remove"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-        <LinearLayout android:visibility="gone"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText android:id="@+id/debugPacketIdET"
-                android:hint="Packet Id"
-                android:layout_weight="3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText android:id="@+id/debugBranchIdET"
-                android:hint="Branch Id"
-                android:layout_weight="3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Button android:id="@+id/debugAddBTN"
-                android:text="Add"
-                android:layout_weight="4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

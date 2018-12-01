@@ -1,13 +1,13 @@
 package com.gilmaimon.israelposttracker;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
@@ -21,15 +21,21 @@ import com.gilmaimon.israelposttracker.Balance.PostPacketsBalance;
 import com.gilmaimon.israelposttracker.Branches.AndroidBranchWebsiteDispatcher;
 import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Branches.JsonBranches;
-import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
+import com.gilmaimon.israelposttracker.SMS.IncomingIsraelPostSMSMessages;
 import com.gilmaimon.israelposttracker.SMS.NewSmsBroadcastListener;
 import com.gilmaimon.israelposttracker.SMS.SMSProvider;
-import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.UserAppended.SQLiteUserAppendedActions;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private Permissions.OnRequestPermissionHandler mSmsPermissionHandler;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(IncomingIsraelPostSMSMessages.APP_NOTIFICATION_ID);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +72,10 @@ public class MainActivity extends AppCompatActivity {
         BranchesProvider branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
         PostPacketsBalance balance = new DynamicPostPacketsBalance(
                 new SQLiteUserAppendedActions(this, false),
-                SMSProvider.from(this, "%Post%"), // todo: change to "Israel Post" or "%1111% for debug
+                SMSProvider.from(this, Rules.getPostSmsNumber()), // todo: change to "Israel Post" or "%1111% for debug
                 branchesProvider,
-                KeywordsMessagesSorter.getDefault(),
-                new RegexPostMessageParser()
+                Rules.getDefaultSorter(),
+                Rules.getDefaultParser()
         );
 
         PacketsBalanceContract.View balanceFragment = new BalanceFragment();

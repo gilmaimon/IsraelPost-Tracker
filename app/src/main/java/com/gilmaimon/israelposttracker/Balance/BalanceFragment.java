@@ -25,6 +25,7 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
 
     private PacketsBalanceAdapter branchesPacketsAdapter;
     private RecyclerView recyclerView;
+    private ViewGroup layoutNoItems;
 
     // Balance is assumed to be set when view is rendered
     private PostPacketsBalance balance;
@@ -35,6 +36,7 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
     public void onResume() {
         super.onResume();
         presenter.onResume();
+        updateRecyclerView();
     }
 
     @Override
@@ -54,6 +56,7 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
         super.onViewCreated(view, savedInstanceState);
         initRecyclerView();
 
+        layoutNoItems = getView().findViewById(R.id.layoutNoItemsRL);
         final FloatingActionButton addManuallyFab = getView().findViewById(R.id.addPostItemFAB);
         addManuallyFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +77,8 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+        maybeShowNoItems();
     }
 
     private RecyclerView findAndInitRecyclerView() {
@@ -94,6 +99,14 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
                 getContext(),
                 balance
         );
+
+        branchesPacketsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                maybeShowNoItems();
+            }
+        });
 
         branchesPacketsAdapter.setClickedListener(new PacketsBalanceAdapter.ItemClickedListener() {
             @Override
@@ -157,8 +170,16 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
         dialog.show();
     }
 
+    private void maybeShowNoItems() {
+        if(branchesPacketsAdapter.isEmpty()) {
+            layoutNoItems.setVisibility(View.VISIBLE);
+        } else {
+            layoutNoItems.setVisibility(View.GONE);
+        }
+    }
     private void updateRecyclerView() {
         branchesPacketsAdapter.notifyDataSetChanged();
+        maybeShowNoItems();
     }
 
     @Override
