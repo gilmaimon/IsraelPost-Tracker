@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
 import com.gilmaimon.israelposttracker.Branches.Branch;
+import com.gilmaimon.israelposttracker.Branches.BranchWebsiteDispatcher;
 import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.SMS.NewSmsBroadcastListener;
@@ -16,13 +17,16 @@ public class BalancePresenter implements PacketsBalanceContract.Presenter, NewSm
     private PostPacketsBalance balance;
     private NewSmsBroadcastListener newSmsBroadcastListener;
     private BranchesProvider branchProvider;
+    private BranchWebsiteDispatcher branchWebsiteDispatcher;
 
     public BalancePresenter(PacketsBalanceContract.View view, BranchesProvider branchProvider,
-                            PostPacketsBalance balance, NewSmsBroadcastListener newSmsBroadcastListener) {
+                            PostPacketsBalance balance, NewSmsBroadcastListener newSmsBroadcastListener,
+                            BranchWebsiteDispatcher branchWebsiteDispatcher) {
         this.view = view;
         this.balance = balance;
         this.newSmsBroadcastListener = newSmsBroadcastListener;
         this.branchProvider = branchProvider;
+        this.branchWebsiteDispatcher = branchWebsiteDispatcher;
         view.setPresenter(this);
         view.setBalance(balance);
 
@@ -48,7 +52,7 @@ public class BalancePresenter implements PacketsBalanceContract.Presenter, NewSm
 
     @Override
     public void onBranchClicked(Branch branch) {
-        // Nothing to do
+        branchWebsiteDispatcher.openBranchPage(branch);
     }
 
     @Override

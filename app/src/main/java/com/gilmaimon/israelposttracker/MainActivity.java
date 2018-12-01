@@ -9,7 +9,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.Permissions;
@@ -19,6 +18,7 @@ import com.gilmaimon.israelposttracker.Balance.BalancePresenter;
 import com.gilmaimon.israelposttracker.Balance.DynamicPostPacketsBalance;
 import com.gilmaimon.israelposttracker.Balance.PacketsBalanceContract;
 import com.gilmaimon.israelposttracker.Balance.PostPacketsBalance;
+import com.gilmaimon.israelposttracker.Branches.AndroidBranchWebsiteDispatcher;
 import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Branches.JsonBranches;
 import com.gilmaimon.israelposttracker.Parsing.RegexPostMessageParser;
@@ -27,8 +27,7 @@ import com.gilmaimon.israelposttracker.SMS.SMSProvider;
 import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.UserAppended.SQLiteUserAppendedActions;
 
-
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private Permissions.OnRequestPermissionHandler mSmsPermissionHandler;
 
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity  {
         BranchesProvider branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
         PostPacketsBalance balance = new DynamicPostPacketsBalance(
                 new SQLiteUserAppendedActions(this, false),
-                SMSProvider.from(this, "%1111%"), // todo: change to "Israel Post" or "%1111% for debug
+                SMSProvider.from(this, "%Post%"), // todo: change to "Israel Post" or "%1111% for debug
                 branchesProvider,
                 KeywordsMessagesSorter.getDefault(),
                 new RegexPostMessageParser()
@@ -78,7 +77,8 @@ public class MainActivity extends AppCompatActivity  {
                 balanceFragment,
                 branchesProvider,
                 balance,
-                newSmsBroadcastListener
+                newSmsBroadcastListener,
+                new AndroidBranchWebsiteDispatcher(this)
         );
 
         getSupportFragmentManager().beginTransaction().replace(R.id.contentPlaceholder, (Fragment) balanceFragment).commit();

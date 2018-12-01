@@ -35,6 +35,7 @@ public class JsonBranches extends BranchesProvider {
     static String getStringOrNull(JSONObject object, String key) throws JSONException {
         String value = object.getString(key);
         if(value.equals("null")) return null;
+        if(value.trim().equals("")) return null;
         return value;
     }
 
