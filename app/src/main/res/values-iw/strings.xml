@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">מעקב חבילות</string>
+    <string name="add_packet">הוסף חבילה</string>
+    <string name="branch_id">מספר החבילה</string>
+    <string name="branch_id_hint">ג123</string>
+    <string name="branch_name">שם הסניף</string>
+    <string name="branch_name_hint">סניף דואר, אופקים</string>
+    <string name="button_add">הוסף</string>
+    <string name="generic_branch_icon">סמל סניף</string>
+    <string name="placeholder_branch_name">יחידת דואר ממס - בן בן</string>
+    <string name="branch_adress_placeholder">ההסתדרות 40, מיקוד: 7864118 אשקלון</string>
+    <string name="phone_icon">סמל טלפון</string>
+    <string name="placeholder_branch_phone_number">972-54-123123</string>
+    <string name="branch_id_placeholder">0004</string>
+    <string name="no_items_icon">סמל אין פריטים</string>
+    <string name="no_pending_packets">אין פריטים להצגה</string>
+    <string name="time_ago_placeholder">לפני 3 ימים</string>
+    <string name="placeholder_post_id">YY511282674IL</string>
+    <string name="placeholder_branch_packet_id">ג1234</string>
+    <string name="invalid_dialog_input_branch">סניף לא מוכר</string>
+    <string name="invalid_dialog_input_id">מספר החבילה לא תקין</string>
+    <string name="removed">נמחק מהרשימה</string>
+    <string name="undo">בטל</string>
+    <string name="notification_title">מעקב חבילות</string>
+    <string name="notification_body">קיבלת מסרון על חבילה שמחכה לך! לחץ כאן לעוד פרטים</string>
+
+</resources>

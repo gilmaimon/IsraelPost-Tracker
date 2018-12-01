@@ -14,4 +14,13 @@
     <string name="branch_id_placeholder">0004</string>
     <string name="no_items_icon">No Items Icon</string>
     <string name="no_pending_packets">No Pending Packets</string>
+    <string name="time_ago_placeholder">3 days ago</string>
+    <string name="placeholder_post_id">YY511282674IL</string>
+    <string name="placeholder_branch_packet_id">ג1234</string>
+    <string name="invalid_dialog_input_branch">Unknown Branch</string>
+    <string name="invalid_dialog_input_id">Invalid Packet Id</string>
+    <string name="removed">Removed</string>
+    <string name="undo">UNDO</string>
+    <string name="notification_title">Israel-Post Tracker</string>
+    <string name="notification_body">You\'ve an SMS about a packet! Click for more information</string>
 </resources>

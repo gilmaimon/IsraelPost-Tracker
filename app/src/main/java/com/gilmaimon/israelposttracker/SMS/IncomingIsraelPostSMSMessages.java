@@ -119,8 +119,8 @@ public class IncomingIsraelPostSMSMessages extends BroadcastReceiver {
         }
 
         builder
-            .setContentTitle("Israel-Post Tracker")
-            .setContentText("You've an SMS about a packet. Click for more information.")
+            .setContentTitle(context.getString(R.string.notification_title))
+            .setContentText(context.getString(R.string.notification_body))
             .setSubText(branchName)
             .setNumber(5)
             .setContentIntent(intent)

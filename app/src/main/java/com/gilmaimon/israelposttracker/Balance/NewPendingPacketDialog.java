@@ -57,11 +57,15 @@ class NewPendingPacketDialog extends Dialog {
                 String inputPlacement = packetPlacement.getText().toString();
                 int branchId = branchIdFromName(branchInput.getText().toString());
 
-                if(branchId != -1) {
+                if(inputPlacement.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.invalid_dialog_input_id, Toast.LENGTH_SHORT).show();
+                }
+                else if(branchId == -1) {
+                    Toast.makeText(getContext(), R.string.invalid_dialog_input_branch, Toast.LENGTH_SHORT).show();
+                }
+                else {
                     callback.onSubmit(inputPlacement, branchId);
                     hide();
-                } else {
-                    Toast.makeText(getContext(), "Invalid Branch", Toast.LENGTH_SHORT).show();
                 }
             }
         });

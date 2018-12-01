@@ -48,10 +48,13 @@
                 android:gravity="right"
                 android:textColor="#111"
                 android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="5dp"
+
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ג1234"
+                android:text="@string/placeholder_branch_packet_id"
                 android:textSize="20sp"
                 />
             <TextView android:id="@+id/postalIdTV"
@@ -59,10 +62,13 @@
                 android:textColor="#666"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/packetBranchIdTV"
-                android:layout_marginHorizontal="5dp"
+
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="YY511282674IL"
+                android:text="@string/placeholder_post_id"
                 android:textSize="10sp"
                 android:layout_marginBottom="5dp"
                 />
@@ -71,12 +77,15 @@
 
         <TextView
             android:id="@+id/lastNoticeTV"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
+
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+
             android:gravity="left"
             android:layout_marginTop="10dp"
-            android:text="3 days ago"
+            android:text="@string/time_ago_placeholder"
             android:textColor="#999"
             android:textSize="10sp"
             />

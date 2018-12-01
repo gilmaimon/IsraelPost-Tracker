@@ -147,10 +147,10 @@ public class BalanceFragment extends Fragment implements PacketsBalanceContract.
         branchesPacketsAdapter.removeItemAt(position);
         Snackbar snackbar = Snackbar.make(
                 getView().findViewById(R.id.coordinatorLayout),
-                "Removed " + packet.getPostId(),
-                Snackbar.LENGTH_SHORT);
+                packet.getPostId() + " " + getString(R.string.removed),
+                Snackbar.LENGTH_LONG);
 
-        snackbar.setAction("UNDO", new View.OnClickListener() {
+        snackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 undoRemove.undo();
