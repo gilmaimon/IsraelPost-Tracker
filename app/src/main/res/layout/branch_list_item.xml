@@ -22,7 +22,6 @@
         <RelativeLayout
             android:layout_marginTop="35dp"
             android:layout_marginBottom="35dp"
-
             android:layout_marginRight="10dp"
             android:id="@+id/blockTitleSubtitle"
             android:layout_toLeftOf="@+id/postIconIMG"
@@ -48,6 +47,34 @@
                 android:text="ההסתדרות 40, מיקוד: 7864118 אשקלון"
                 android:textSize="13sp"
                 />
+
+            <LinearLayout android:id="@+id/branchPhoneContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/branchAddressTV"
+                android:layout_alignParentRight="true"
+                android:background="?android:attr/selectableItemBackground"
+                >
+
+                <ImageView android:id="@+id/phoneIcon"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginTop="05dp"
+                    android:src="@drawable/ic_local_phone_24dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/branchPhoneNumberTV"
+                    android:layout_marginTop="6dp"
+                    android:text="972-54-123123"
+                    android:textSize="16sp"
+                    android:layout_marginRight="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
         </RelativeLayout>
     </RelativeLayout>
 

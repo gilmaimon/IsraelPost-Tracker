@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gilmaimon.israelposttracker.AndroidUtils.UndoableAction;
+import com.gilmaimon.israelposttracker.Balance.Adapter.PacketsBalanceAdapter;
 import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.Branches.BranchesProvider;
 import com.gilmaimon.israelposttracker.Packets.Packet;

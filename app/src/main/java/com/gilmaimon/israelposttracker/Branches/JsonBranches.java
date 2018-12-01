@@ -21,13 +21,21 @@ public class JsonBranches extends BranchesProvider {
             JSONObject branchJson = branchesJson.getJSONObject(iBranch);
             resultBranches.add(
                     new Branch(
-                            branchJson.getInt("number"),
-                            branchJson.getString("name"),
-                            branchJson.getString("location")
-                     )
+                            branchJson.getInt("id"),
+                            getStringOrNull(branchJson, "name"),
+                            getStringOrNull(branchJson, "address"),
+                            getStringOrNull(branchJson, "active"),
+                            getStringOrNull(branchJson, "phone")
+                    )
             );
         }
         return resultBranches;
+    }
+
+    static String getStringOrNull(JSONObject object, String key) throws JSONException {
+        String value = object.getString(key);
+        if(value.equals("null")) return null;
+        return value;
     }
 
     public JsonBranches(String jsonString){
