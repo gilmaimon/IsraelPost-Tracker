@@ -20,11 +20,11 @@ public class Rules {
     }
 
     public static boolean isSenderRelevant(String sender) {
-        return sender.contains("1"); //"Israel Post"
+        return sender.contains("Israel Post"); //"Israel Post"
     }
 
     public static String getPostSmsNumber() {
-        return "%111%"; //"Israel Post";
+        return "Israel Post"; //"Israel Post";
     }
 
     public static BranchesProvider getDefaultBranchesProvider(Context context) {
