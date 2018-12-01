@@ -18,10 +18,6 @@ public class PendingPacket extends Packet {
         this(postId, branchId, branchPacketId, new Date(lastNotice));
     }
 
-    public void setLastNotice(Date date) {
-        this.lastNotice = date;
-    }
-
     public int getBranchId() {
         return this.branchId;
     }

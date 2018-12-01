@@ -33,8 +33,8 @@
             android:src="@drawable/ic_packet"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
 
         <RelativeLayout
             android:layout_toLeftOf="@+id/icPacketIMG"

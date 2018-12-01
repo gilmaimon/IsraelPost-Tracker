@@ -10,10 +10,13 @@ import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 
 public interface PacketsBalanceContract {
     interface Presenter extends BasePresenter {
+        // View Events
         void onPacketSwiped(PendingPacket packet, int position);
         void onPacketClicked(PendingPacket packet);
         void onBranchClicked(Branch branch);
         void newPostEntryClicked();
+
+        // View Input
         void newPendingPacketSubmitted(String postalID, int branchId, String branchPacketId);
     }
 

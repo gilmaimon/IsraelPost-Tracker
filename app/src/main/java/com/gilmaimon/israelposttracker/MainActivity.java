@@ -67,14 +67,19 @@ public class MainActivity extends AppCompatActivity  {
         BranchesProvider branchesProvider = new JsonBranches(new RawResource(this, R.raw.branches).readAll());
         PostPacketsBalance balance = new DynamicPostPacketsBalance(
                 new SQLiteUserAppendedActions(this, false),
-                SMSProvider.from(this, "%Post%"), // todo: change to "Israel Post" or "%1111% for debug
+                SMSProvider.from(this, "%1111%"), // todo: change to "Israel Post" or "%1111% for debug
                 branchesProvider,
                 KeywordsMessagesSorter.getDefault(),
                 new RegexPostMessageParser()
         );
 
         PacketsBalanceContract.View balanceFragment = new BalanceFragment();
-        PacketsBalanceContract.Presenter balancePresenter = new BalancePresenter(balanceFragment, branchesProvider, balance, newSmsBroadcastListener);
+        PacketsBalanceContract.Presenter balancePresenter = new BalancePresenter(
+                balanceFragment,
+                branchesProvider,
+                balance,
+                newSmsBroadcastListener
+        );
 
         getSupportFragmentManager().beginTransaction().replace(R.id.contentPlaceholder, (Fragment) balanceFragment).commit();
     }
