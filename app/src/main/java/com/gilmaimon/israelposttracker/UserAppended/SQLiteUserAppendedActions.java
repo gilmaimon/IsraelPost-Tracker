@@ -11,6 +11,7 @@ import com.gilmaimon.israelposttracker.Packets.Packet;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +27,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
     private static final String COLUMN_BRANCH_ID = "branch_id";
     private static final String COLUMN_BRANCH_PLACEMENT_ID = "branch_placement_id";
     private static final String COLUMN_LAST_NOTICE = "last_notice";
+    private static final String COLUMN_INSERTION_TIME = "insert_time";
 
 
     private static final String SQL_CREATE_TABLE =
@@ -35,6 +37,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
                     COLUMN_POST_ID + " TEXT," +
                     COLUMN_BRANCH_ID + " INTEGER," +
                     COLUMN_LAST_NOTICE + " INTEGER," +
+                    COLUMN_INSERTION_TIME + " INTEGER," +
                     COLUMN_BRANCH_PLACEMENT_ID + " TEXT)";
 
     private static final String SQL_DELETE_TABLE =
@@ -56,7 +59,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
     }
 
     public SQLiteUserAppendedActions(Context context, boolean debugStartFresh) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
         if(debugStartFresh) {
             onUpgrade(getWritableDatabase(), 1, 1);
         }
@@ -71,6 +74,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
         dismissedPacket.put(COLUMN_BRANCH_ID, -1);
         dismissedPacket.put(COLUMN_BRANCH_PLACEMENT_ID, "Unknown");
         dismissedPacket.put(COLUMN_LAST_NOTICE, 0);
+        dismissedPacket.put(COLUMN_INSERTION_TIME, new Date().getTime());
 
         // add the new entry for the dismissed packet
         getWritableDatabase().insert(TABLE_NAME, null, dismissedPacket);
@@ -98,6 +102,7 @@ public class SQLiteUserAppendedActions extends SQLiteOpenHelper implements UserA
         newPendingPacketEntry.put(COLUMN_BRANCH_ID, packet.getBranchId());
         newPendingPacketEntry.put(COLUMN_BRANCH_PLACEMENT_ID, packet.getBranchPacketId());
         newPendingPacketEntry.put(COLUMN_LAST_NOTICE, packet.getLastNotice().getTime());
+        newPendingPacketEntry.put(COLUMN_INSERTION_TIME, new Date().getTime());
 
         // add the new entry for the dismissed packet
         getWritableDatabase().insert(TABLE_NAME, null, newPendingPacketEntry);
