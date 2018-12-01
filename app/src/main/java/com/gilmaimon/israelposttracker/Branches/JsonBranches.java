@@ -19,6 +19,7 @@ public class JsonBranches extends BranchesProvider {
         JSONArray branchesJson = new JSONArray(jsonString);
         for(int iBranch = 0; iBranch < branchesJson.length(); iBranch++) {
             JSONObject branchJson = branchesJson.getJSONObject(iBranch);
+            if(getStringOrNull(branchJson, "name") == null) continue;
             resultBranches.add(
                     new Branch(
                             branchJson.getInt("id"),

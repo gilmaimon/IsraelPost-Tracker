@@ -98,13 +98,18 @@ public class NewPendingPacketDialog extends Dialog {
                 return str;
             }
             @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
+            protected FilterResults performFiltering(CharSequence csConstraint) {
+                String constraint = String.valueOf(csConstraint);
                 if(constraint != null) {
                     List<Branch> suggestions = new ArrayList<>();
                     for (Branch branch : allBranches) {
-                        if(branch.getName().contains(constraint) ||
-                                branch.getAddress().contains(constraint)){
-                            suggestions.add(branch);
+                        try {
+                            if(branch.getName().contains(constraint) ||
+                                    branch.getAddress().contains(constraint)){
+                                suggestions.add(branch);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                     FilterResults filterResults = new FilterResults();
