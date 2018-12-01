@@ -13,11 +13,11 @@ import java.util.Date;
 
 public class BalancePresenter implements PacketsBalanceContract.Presenter, NewSmsBroadcastListener.NewSmsListener {
 
-    private PacketsBalanceContract.View view;
-    private PostPacketsBalance balance;
-    private NewSmsBroadcastListener newSmsBroadcastListener;
-    private BranchesProvider branchProvider;
-    private BranchWebsiteDispatcher branchWebsiteDispatcher;
+    private final PacketsBalanceContract.View view;
+    private final PostPacketsBalance balance;
+    private final NewSmsBroadcastListener newSmsBroadcastListener;
+    private final BranchesProvider branchProvider;
+    private final BranchWebsiteDispatcher branchWebsiteDispatcher;
 
     public BalancePresenter(PacketsBalanceContract.View view, BranchesProvider branchProvider,
                             PostPacketsBalance balance, NewSmsBroadcastListener newSmsBroadcastListener,

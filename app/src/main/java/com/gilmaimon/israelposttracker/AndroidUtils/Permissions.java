@@ -18,7 +18,7 @@ public class Permissions {
     public static class OnRequestPermissionHandler {
         private final String[] requestedPermissions;
         private final int requestCode;
-        private PermissionCallback callback;
+        private final PermissionCallback callback;
 
         OnRequestPermissionHandler(String[] requestedPermissions, int requestCode, PermissionCallback callback) {
             this.requestedPermissions = requestedPermissions;
@@ -37,8 +37,8 @@ public class Permissions {
         }
     }
 
-    private static int requestCodeFromString(String[] strs) {
-        return Math.abs(Arrays.hashCode(strs)) % (1 << 16);
+    private static int requestCodeFromString(String[] strings) {
+        return Math.abs(Arrays.hashCode(strings)) % (1 << 16);
     }
 
     public static OnRequestPermissionHandler RequirePermission(Activity context,

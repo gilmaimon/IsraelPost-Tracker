@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class RawResource {
-    private int resourceId;
-    private Context context;
+    private final int resourceId;
+    private final Context context;
 
     public RawResource(Context context, int id) {
         this.resourceId = id;
@@ -18,7 +18,7 @@ public class RawResource {
 
     public String readAll() {
         InputStream is = context.getResources().openRawResource(resourceId );
-        String content = null;
+        String content;
         try {
             content = IOUtils.toString(is);
         } catch (IOException e) {

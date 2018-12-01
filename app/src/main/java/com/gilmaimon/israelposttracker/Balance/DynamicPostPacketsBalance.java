@@ -30,9 +30,8 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
     private final PostMessageSorter sorter;
     private final PostMessageParser parser;
 
-    private Map<Branch, Set<PendingPacket>> allPendingMessages;
-
-    private UserAppendedPacketActions userAppendedPacketActions;
+    private final Map<Branch, Set<PendingPacket>> allPendingMessages;
+    private final UserAppendedPacketActions userAppendedPacketActions;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public DynamicPostPacketsBalance(@NonNull UserAppendedPacketActions userAppendedPacketActions,
@@ -80,7 +79,7 @@ public class DynamicPostPacketsBalance implements PostPacketsBalance {
     }
 
     private void _addPendingPacket(PendingPacket pendingPacket, Set<PendingPacket> seenPendingPackets) {
-        // This trick is for making sure the same packet (or postal id) dosent exist in 2 branches in the same time
+        // This trick is for making sure the same packet (or postal id) doesn't exist in 2 branches in the same time
         // so when a packet was already seen before (same postal id) we dismiss it from everywhere in our branches map
         // and it can be added to the current branch as it is the latest one
         if(seenPendingPackets.contains(pendingPacket)) {

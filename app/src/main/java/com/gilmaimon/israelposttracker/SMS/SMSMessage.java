@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class SMSMessage {
 
-    private String sender;
-    private String message;
-    private Date date;
+    private final String sender;
+    private final String message;
+    private final Date date;
 
     SMSMessage(String sender, String message, Date date) {
         this.sender = sender;

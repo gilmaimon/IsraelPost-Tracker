@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 public class AndroidBranchWebsiteDispatcher implements BranchWebsiteDispatcher {
-    public Context context;
+    private final Context context;
 
     public AndroidBranchWebsiteDispatcher(Context context) {
         this.context = context;

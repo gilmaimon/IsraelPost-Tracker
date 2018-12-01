@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 public abstract class BranchesProvider {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     abstract boolean available();
 
     @NonNull

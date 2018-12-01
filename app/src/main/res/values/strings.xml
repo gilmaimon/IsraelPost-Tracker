@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Post Tracker</string>
+    <string name="add_packet">Add Packet</string>
+    <string name="branch_id">Branch Id</string>
+    <string name="branch_id_hint">ג123</string>
+    <string name="branch_name">Branch Name</string>
+    <string name="branch_name_hint">סניף דואר, אופקים</string>
+    <string name="button_add">ADD</string>
+    <string name="generic_branch_icon">Generic Branch Icon</string>
+    <string name="placeholder_branch_name">יחידת דואר ממס - בן בן</string>
+    <string name="branch_adress_placeholder">ההסתדרות 40, מיקוד: 7864118 אשקלון</string>
+    <string name="phone_icon">Phone Icon</string>
+    <string name="placeholder_branch_phone_number">972-54-123123</string>
+    <string name="branch_id_placeholder">0004</string>
+    <string name="no_items_icon">No Items Icon</string>
+    <string name="no_pending_packets">No Pending Packets</string>
 </resources>

@@ -14,14 +14,15 @@
             android:orientation="vertical"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView android:src="@drawable/ic_inbox"
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                android:contentDescription="@string/no_items_icon" />
 
-            <TextView android:text="No Pending Packets"
+            <TextView android:text="@string/no_pending_packets"
                 android:textSize="50sp"
                 android:textColor="#ccc"
                 android:gravity="center"
@@ -33,7 +34,6 @@
     </RelativeLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"

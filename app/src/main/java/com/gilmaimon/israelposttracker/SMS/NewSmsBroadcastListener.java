@@ -17,8 +17,8 @@ public class NewSmsBroadcastListener {
         void onSmsReceived();
     }
 
-    private Context context;
-    private BroadcastReceiver newSmsMessageReceiver;
+    private final Context context;
+    private final BroadcastReceiver newSmsMessageReceiver;
     private NewSmsListener listener;
 
     public NewSmsBroadcastListener(@NonNull Context context) {

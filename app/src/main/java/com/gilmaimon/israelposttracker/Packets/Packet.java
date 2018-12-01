@@ -1,7 +1,7 @@
 package com.gilmaimon.israelposttracker.Packets;
 
 public class Packet {
-    private String postId;
+    private final String postId;
 
     public Packet(String postId) {
         this.postId = postId;
@@ -18,7 +18,9 @@ public class Packet {
 
     @Override
     public boolean equals(Object otherObj) {
-        Packet other = (Packet) otherObj;
-        return this.getPostId().equals(other.getPostId());
+        if (otherObj instanceof Packet) {
+            Packet other = (Packet) otherObj;
+            return this.getPostId().equals(other.getPostId());
+        } else return false;
     }
 }

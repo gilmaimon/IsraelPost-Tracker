@@ -11,12 +11,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.provider.Telephony;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.gilmaimon.israelposttracker.Branches.Branch;
 import com.gilmaimon.israelposttracker.MainActivity;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 import com.gilmaimon.israelposttracker.Parsing.PostMessageParser;
@@ -24,7 +23,6 @@ import com.gilmaimon.israelposttracker.Parsing.UnknownMessageFormat;
 import com.gilmaimon.israelposttracker.PostTrackerApplication;
 import com.gilmaimon.israelposttracker.R;
 import com.gilmaimon.israelposttracker.Rules;
-import com.gilmaimon.israelposttracker.Sorting.KeywordsMessagesSorter;
 import com.gilmaimon.israelposttracker.Sorting.PostMessageSorter;
 
 import java.util.Date;
@@ -76,7 +74,7 @@ public class IncomingIsraelPostSMSMessages extends BroadcastReceiver {
     private final static String CHANNEL_NAME = "Israel-Post Tracker Notifications";
     private final static String CHANNEL_DESC = "PostTracker App Notifications";
 
-    public void initChannel(NotificationManager notificationManager) {
+    private void initChannel(NotificationManager notificationManager) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
@@ -99,6 +97,9 @@ public class IncomingIsraelPostSMSMessages extends BroadcastReceiver {
 
         final NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if(notificationManager == null) return;
+
         initChannel(notificationManager);
 
         Intent notificationIntent = new Intent(context, MainActivity.class);
@@ -107,9 +108,10 @@ public class IncomingIsraelPostSMSMessages extends BroadcastReceiver {
         PendingIntent intent = PendingIntent.getActivity(context, 0,
                 notificationIntent, 0);
 
-        String branchName = Rules.getDefaultBranchesProvider(context).getBranch(pendingPacket.getBranchId()).getName();
+        Branch branch = Rules.getDefaultBranchesProvider(context).getBranch(pendingPacket.getBranchId());
+        String branchName = branch == null? "Error" : branch.getName();
 
-        Notification.Builder builder = null;
+        Notification.Builder builder;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             builder = new Notification.Builder(context, CHANNEL_ID);
         } else {
@@ -129,7 +131,7 @@ public class IncomingIsraelPostSMSMessages extends BroadcastReceiver {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    SMSMessage getSMSMessageFromIntent(Intent intent) {
+    private SMSMessage getSMSMessageFromIntent(Intent intent) {
         StringBuilder messageBody = new StringBuilder();
         String from = null;
         Date date = null;

@@ -20,7 +20,7 @@ import com.gilmaimon.israelposttracker.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewPendingPacketDialog extends Dialog {
+class NewPendingPacketDialog extends Dialog {
 
     interface OnPendingPacketSubmit {
         void onSubmit(String branchPlacement, int branch);
@@ -34,7 +34,7 @@ public class NewPendingPacketDialog extends Dialog {
 
 
     private final BranchesProvider branchesProvider;
-    private OnPendingPacketSubmit callback;
+    private final OnPendingPacketSubmit callback;
     private EditText packetPlacement;
 
     @Override
@@ -78,7 +78,7 @@ public class NewPendingPacketDialog extends Dialog {
 
     class AutoCompleteAdapterBranches extends ArrayAdapter<Branch> {
 
-        private List<Branch> allBranches;
+        private final List<Branch> allBranches;
 
         AutoCompleteAdapterBranches(@NonNull Context context, @NonNull List<Branch> objects) {
             super(context, android.R.layout.simple_dropdown_item_1line, objects);
@@ -91,11 +91,10 @@ public class NewPendingPacketDialog extends Dialog {
             return nameFilter;
         }
 
-        Filter nameFilter = new Filter() {
+        final Filter nameFilter = new Filter() {
             @Override
             public String convertResultToString(Object resultValue) {
-                String str = ((Branch)(resultValue)).getName();
-                return str;
+                return ((Branch)(resultValue)).getName();
             }
             @Override
             protected FilterResults performFiltering(CharSequence csConstraint) {

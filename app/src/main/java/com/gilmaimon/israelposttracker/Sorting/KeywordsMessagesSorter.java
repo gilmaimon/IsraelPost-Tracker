@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 public class KeywordsMessagesSorter implements PostMessageSorter {
 
-    private String awaitingKeyword;
-    private String pickedUpKeyword;
+    private final String awaitingKeyword;
+    private final String pickedUpKeyword;
 
     public KeywordsMessagesSorter(String awaitingKeyword, String pickedUpKeyword) {
         this.awaitingKeyword = awaitingKeyword;

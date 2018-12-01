@@ -3,9 +3,9 @@ package com.gilmaimon.israelposttracker.Packets;
 import java.util.Date;
 
 public class PendingPacket extends Packet {
-    private int branchId;
-    private String branchPacketId;
-    private Date lastNotice;
+    private final int branchId;
+    private final String branchPacketId;
+    private final Date lastNotice;
 
     public PendingPacket(String postId, int branchId, String branchPacketId, Date lastNotice) {
         super(postId);

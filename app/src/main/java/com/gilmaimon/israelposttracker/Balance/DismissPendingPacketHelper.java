@@ -6,19 +6,18 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.gilmaimon.israelposttracker.Balance.Adapter.BranchViewHolder;
-import com.gilmaimon.israelposttracker.Balance.Adapter.PacketsBalanceAdapter;
 import com.gilmaimon.israelposttracker.Balance.Adapter.PendingPacketViewHolder;
 import com.gilmaimon.israelposttracker.Packets.PendingPacket;
 
-public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
-    private PacketSwipedListener listener;
+class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
+    private final PacketSwipedListener listener;
 
     public DismissPendingPacketHelper(int dragDirs, int swipeDirs, PacketSwipedListener listener) {
         super(dragDirs, swipeDirs);
         this.listener = listener;
     }
 
-    public DismissPendingPacketHelper(PacketSwipedListener listener) {
+    DismissPendingPacketHelper(PacketSwipedListener listener) {
         super(0, ItemTouchHelper.LEFT);
         this.listener = listener;
     }
@@ -76,11 +75,6 @@ public class DismissPendingPacketHelper extends ItemTouchHelper.SimpleCallback {
         PendingPacketViewHolder holder = (PendingPacketViewHolder) viewHolder;
 
         listener.onPendingPacketSwiped(holder.packet, viewHolder.getAdapterPosition());
-    }
-
-    @Override
-    public int convertToAbsoluteDirection(int flags, int layoutDirection) {
-        return super.convertToAbsoluteDirection(flags, layoutDirection);
     }
 
     public interface PacketSwipedListener {

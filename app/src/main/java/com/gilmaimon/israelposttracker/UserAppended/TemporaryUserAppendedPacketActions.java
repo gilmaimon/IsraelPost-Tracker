@@ -11,8 +11,8 @@ import java.util.Set;
 
 public class TemporaryUserAppendedPacketActions implements UserAppendedPacketActions {
 
-    private Set<Packet> dismissedPackets;
-    private Set<PendingPacket> pendingPackets;
+    private final Set<Packet> dismissedPackets;
+    private final Set<PendingPacket> pendingPackets;
 
     public TemporaryUserAppendedPacketActions() {
         this.dismissedPackets = new HashSet<>();

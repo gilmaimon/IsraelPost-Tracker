@@ -1,11 +1,11 @@
 package com.gilmaimon.israelposttracker.Branches;
 
 public class Branch {
-    private int id;
-    private String name;
-    private String address;
-    private String active;
-    private String phone;
+    private final int id;
+    private final String name;
+    private final String address;
+    private final String active;
+    private final String phone;
 
     public Branch(int id, String name, String address, String active, String phone) {
         this.id = id;

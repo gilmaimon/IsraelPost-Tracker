@@ -6,12 +6,12 @@ import android.widget.TextView;
 
 public class BranchViewHolder extends RecyclerView.ViewHolder {
 
-    public ViewGroup container;
-    public TextView idTV;
-    public TextView branchNameTV;
-    public TextView branchAddressTV;
-    public ViewGroup branchPhoneGroup;
-    public TextView branchPhoneNumberTV;
+    public final ViewGroup container;
+    public final TextView idTV;
+    public final TextView branchNameTV;
+    public final TextView branchAddressTV;
+    public final ViewGroup branchPhoneGroup;
+    public final TextView branchPhoneNumberTV;
 
     public BranchViewHolder(ViewGroup container,
                             TextView idTV,

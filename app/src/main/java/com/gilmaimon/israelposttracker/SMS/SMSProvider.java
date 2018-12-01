@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,9 +13,9 @@ import java.util.List;
 
 public class SMSProvider {
 
-    private String fromSenderFilter;
+    private final String fromSenderFilter;
     private Cursor cursor = null;
-    private Context context;
+    private final Context context;
     private boolean hasMoreToRead;
 
     public static SMSProvider all(Context context) {
@@ -42,7 +43,9 @@ public class SMSProvider {
                 "date asc",
                 null
         );
-        hasMoreToRead = cursor.moveToFirst();
+        if(cursor != null) {
+            hasMoreToRead = cursor.moveToFirst();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

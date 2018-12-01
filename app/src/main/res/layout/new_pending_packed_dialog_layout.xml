@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingVertical="10dp"
-    >
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <TextView
-        android:paddingHorizontal="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
         android:id="@+id/dialogTitle"
-        android:text="Add Packet"
+        android:text="@string/add_packet"
         android:textStyle="bold"
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
@@ -19,7 +19,9 @@
         android:layout_height="wrap_content" />
 
     <RelativeLayout android:id="@+id/blockBranch"
-        android:paddingHorizontal="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
         android:layout_marginTop="15dp"
         android:layout_below="@+id/dialogTitle"
         android:layout_width="match_parent"
@@ -29,20 +31,23 @@
             android:id="@+id/branchIdLabel"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"
-            android:text="Branch Id"
+            android:text="@string/branch_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <EditText android:id="@+id/dialogPacketPlacementET"
+            android:inputType="text"
             android:layout_below="@id/branchIdLabel"
-            android:hint="ג123"
+            android:hint="@string/branch_id_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </RelativeLayout>
 
     <RelativeLayout android:id="@+id/blockBranchId"
-        android:paddingHorizontal="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
         android:layout_marginTop="10dp"
         android:layout_below="@+id/blockBranch"
         android:layout_width="match_parent"
@@ -51,14 +56,14 @@
         <TextView android:id="@+id/branchLabel"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"
-            android:text="Branch"
+            android:text="@string/branch_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <AutoCompleteTextView android:id="@+id/dialogBranchATV"
             android:dropDownHeight="150dp"
             android:layout_below="@id/branchLabel"
-            android:hint="סניף דואר, אופקים"
+            android:hint="@string/branch_name_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -66,15 +71,21 @@
 
     <LinearLayout android:id="@+id/blockAddBtn"
         android:layout_marginTop="20dp"
+
         android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+
         android:layout_below="@+id/blockBranchId"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <Button android:id="@+id/dialogAddBTN"
-            android:text="ADD"
+            android:text="@string/button_add"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"

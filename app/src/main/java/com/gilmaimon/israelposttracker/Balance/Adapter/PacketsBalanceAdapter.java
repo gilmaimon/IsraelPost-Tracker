@@ -28,9 +28,9 @@ public class PacketsBalanceAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final int ITEM_TYPE_BRANCH = 1;
     private final int ITEM_TYPE_POSTAL_ITEM = 2;
 
-    private Context context;
-    private PostPacketsBalance balance;
-    private List<Object> dataset;
+    private final Context context;
+    private final PostPacketsBalance balance;
+    private final List<Object> dataset;
     private ItemClickedListener clickedListener;
 
     public boolean isEmpty() {

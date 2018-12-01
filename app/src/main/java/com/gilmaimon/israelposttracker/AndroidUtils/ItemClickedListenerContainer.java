@@ -1,6 +1,6 @@
 package com.gilmaimon.israelposttracker.AndroidUtils;
 
-public interface ItemClickedListenerContainer<Ty> {
+interface ItemClickedListenerContainer<Ty> {
     void setItemClickedListener(ItemClickedListener<Ty> listener);
     void removeItemClickedListener();
 }
