@@ -22,5 +22,5 @@
     <string name="removed">Removed</string>
     <string name="undo">UNDO</string>
     <string name="notification_title">Israel-Post Tracker</string>
-    <string name="notification_body">You\'ve an SMS about a packet! Click for more information</string>
+    <string name="notification_body">You\'ve got an SMS about a packet! Click for more information</string>
 </resources>
