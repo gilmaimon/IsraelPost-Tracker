@@ -1,3 +1,5 @@
+<a href="https://codeclimate.com/github/gilmaimon/IsraelPost-Tracker/maintainability"><img src="https://api.codeclimate.com/v1/badges/0ad92c3090a316d7a047/maintainability" /></a>
+
 # Israel-Post Packet Logger/Tracker 
 
 App for keeping track of post items using Israel-Post SMS messages.
